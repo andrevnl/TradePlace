@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+            <item
+            android:id="@+id/nav_principal"
+            android:icon="@drawable/ic_menu_home"
+            android:title="Página principal" />
+        <item
+            android:id="@+id/nav_rotas"
+            android:icon="@drawable/ic_menu_place"
+            android:title="Históricos de rotas" />
+        <item
+            android:id="@+id/nav_perfil"
+            android:icon="@drawable/ic_menu_people"
+            android:title="Perfil do usuário" />
+    </group>
+
+    <item android:title="SISTEMA">
+        <menu>
+            <item
+                android:id="@+id/nav_informacoes"
+                android:icon="@drawable/ic_menu_help"
+                android:title="Informações" />
+            <item
+                android:id="@+id/nav_sair"
+                android:icon="@drawable/ic_cancel_black_24dp"
+                android:title="Sair" />
+        </menu>
+    </item>
+
+</menu>

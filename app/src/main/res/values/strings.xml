@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">TradePlace</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Sair</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_maps_completo">Map</string>
+    <string name="title_activity_main_perfil">MainPerfilActivity</string>
+    <string name="title_activity_main_informacoes">MainInformacoesActivity</string>
+</resources>
