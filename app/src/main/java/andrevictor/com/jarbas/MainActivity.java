@@ -101,12 +101,12 @@ public class MainActivity extends AppCompatActivity
         //Copula o array e joga na listview
         ///////////////////////////////////////////////////////////////////////////////
         locais = new ArrayList<>();
-        locais.add("Rota A - Extra Paulista");
-        locais.add("Rota B - Pão de açucar Ana  Rosa");
-        locais.add("Rota C - Carrefour Ana Rosa");
-        locais.add("Rota D - Supermercado Sol Jandira");
-        locais.add("Rota E - Supermercado Japão Barueri ");
-        locais.add("Rota E - Supermercado Nenhum ");
+        locais.add("EXTRA PAULISTA");
+        locais.add("PÃO DE AÇÚCAR ANA ROSA");
+        locais.add("CARREFOUR ANA ROSA");
+        locais.add("EXTRA PAULISTA");
+        locais.add("PÃO DE AÇÚCAR ANA ROSA");
+        locais.add("CARREFOUR ANA ROSA");
 
         //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, locais);
         //listaPrincipal.setAdapter(arrayAdapter);
@@ -151,8 +151,8 @@ public class MainActivity extends AppCompatActivity
         int contador = 0;
 
 
-        for ( contador = 0; contador < 6; contador++){
-            ItemListView item = new ItemListView(locais.get(contador), R.drawable.ic_format_color_text_black_24dp);
+        for ( contador = 0; contador < locais.size(); contador++){
+            ItemListView item = new ItemListView(locais.get(contador), R.drawable.andre);
             itens.add(item);
         }
 
@@ -161,8 +161,6 @@ public class MainActivity extends AppCompatActivity
 
         //Define o Adapter
         listaPrincipal.setAdapter(adapterListView);
-        //Cor quando a lista é selecionada para ralagem.
-        listaPrincipal.setCacheColorHint(Color.TRANSPARENT);
     }
 
     //Todos os metodos abaixo tem a ver com o menu lateral
@@ -249,10 +247,13 @@ public class MainActivity extends AppCompatActivity
         mapa.getUiSettings().setAllGesturesEnabled(false);
 
         LatLng ponto = new LatLng(-23.581485,-46.638507);
+        LatLng ponto2 = new LatLng(-23.581465,-46.638503);
         mapa.addMarker(new MarkerOptions().position(ponto));
+        mapa.addMarker(new MarkerOptions().position(ponto2));
+
 
         //Dar zoom no mapa
-        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(ponto,18));
+        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(ponto,12));
     }
 
     //Parte que mexe com permissoes (Verificar para Android 5.0 e 4.0)

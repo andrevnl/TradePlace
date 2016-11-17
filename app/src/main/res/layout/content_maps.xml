@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="andrevictor.com.jarbas.MapsActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/app_bar_main2">
 
     <LinearLayout
         android:orientation="vertical"
@@ -34,7 +34,6 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false"
             android:id="@+id/ListPrincipal" />
     </LinearLayout>
 

@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +42,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
     static ArrayList<String> lugares;
     static ArrayAdapter arrayAdapter;
     private Polyline polyline;
+    private AdapterListView adapterListView;
     private ArrayList<ItemListView> itens;
     static ArrayList<LatLng> listlatlong;
 
@@ -50,6 +53,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
     private GoogleMap mMap;
     private ProgressDialog load;
     ListView listaPrincipal;
+    FloatingActionButton btnFinalizarRota;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,23 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        //Botao flutuante - Finalizar rota
+        btnFinalizarRota = (FloatingActionButton) findViewById(R.id.fabConcluir);
+        btnFinalizarRota.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Finalizar rota", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                //Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                // Bundle bundle = new Bundle();
+                // bundle.putInt("posicao",position);
+                // intent.putExtras(bundle);
+                //startActivity(intent);
+            }
+        });
+
 
         //Comeco da parte que mexe com menu lateral
         //////////////////////////////////////////////////////////////////////////////
@@ -98,10 +119,9 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
 
         lugares = new ArrayList<>();
 
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, lugares);
-        listaPrincipal.setAdapter(arrayAdapter);
-
-
+        createListView();
+        //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, lugares);
+        //listaPrincipal.setAdapter(arrayAdapter);
 
         //Chama Async Task
         download.execute();
@@ -115,17 +135,16 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
         int contador = 0;
 
 
-        for ( contador = 0; contador < 6; contador++){
-            ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_format_color_text_black_24dp);
+        for ( contador = 0; contador < lugares.size(); contador++){
+            ItemListView item = new ItemListView(lugares.get(contador), R.drawable.andre);
             itens.add(item);
         }
 
         //Cria o adapter
-        //adapterListView = new AdapterListView(this, itens);
+        adapterListView = new AdapterListView(this, itens);
 
         //Define o Adapter
-        //listaPrincipal.setAdapter(adapterListView);
-        //listaPrincipal.setAdapter(arrayAdapter);
+        listaPrincipal.setAdapter(adapterListView);
         //Cor quando a lista é selecionada para ralagem.
         listaPrincipal.setCacheColorHint(Color.TRANSPARENT);
     }
@@ -272,10 +291,11 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected void onPostExecute(Direcoes direcoes){
 
-            createListView();
+
             //lugares.add(direcoes.getNomeLocal());
             lugares.add(direcoes.getPreco());
-            listaPrincipal.setAdapter(arrayAdapter);
+            //listaPrincipal.setAdapter(arrayAdapter);
+            createListView();
 
             drawRoute();
             load.dismiss();
@@ -289,6 +309,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
             });
         }
     }
+
     //Metodo para desenhar no mapa
     public void drawRoute(){
         PolylineOptions po;

@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
+            android:label="Visão geral - Rotas"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,7 +38,7 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/app_name"
+            android:label="Detalhes da rota"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <intent-filter>
@@ -47,7 +47,7 @@
 
         <activity
             android:name=".Main2Activity"
-            android:label="@string/app_name"
+            android:label="Adicionar rota"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

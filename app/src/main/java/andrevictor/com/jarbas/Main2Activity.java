@@ -4,7 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,9 +15,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import static andrevictor.com.jarbas.MainActivity.arrayAdapter;
+import static andrevictor.com.jarbas.MainActivity.locais;
+
 public class Main2Activity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    FloatingActionButton btnAddRota;
+    EditText localizacaoAtual;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +49,32 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
         //Fim da parte que mexe com menu lateral
         //////////////////////////////////////////////////////////////////////////////
+
+        localizacaoAtual = (EditText) findViewById(R.id.editText);
+        localizacaoAtual.setEnabled(false);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+
+        arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,locais);
+
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(arrayAdapter);
+
+        //Botao flutuante - Add rota
+        btnAddRota = (FloatingActionButton) findViewById(R.id.fabAdd);
+        btnAddRota.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Adicionar rota", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                //Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                // Bundle bundle = new Bundle();
+                // bundle.putInt("posicao",position);
+                // intent.putExtras(bundle);
+                //startActivity(intent);
+            }
+        });
     }
 
     @Override
