@@ -3,7 +3,6 @@ package andrevictor.com.jarbas;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +28,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+
+import andrevictor.com.jarbas.ClassesDiversas.AdapterListView;
+import andrevictor.com.jarbas.ClassesDiversas.ItemListView;
 
 public class MainActivity extends AppCompatActivity
         implements AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
@@ -62,6 +64,9 @@ public class MainActivity extends AppCompatActivity
 
         //Muda a fonte padrão
         TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "font/Roboto-Regular.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
+        TypefaceUtil.overrideFont(getApplicationContext(), "monospace", "font/Roboto-Regular.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
+        TypefaceUtil.overrideFont(getApplicationContext(), "normal", "font/Roboto-Regular.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,7 +91,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 //Snackbar.make(view, "Criar nova rota", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
-                Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                Intent intent = new Intent(getApplicationContext(), TelaAddRota.class);
                // Bundle bundle = new Bundle();
                // bundle.putInt("posicao",position);
                // intent.putExtras(bundle);
@@ -152,7 +157,7 @@ public class MainActivity extends AppCompatActivity
 
 
         for ( contador = 0; contador < locais.size(); contador++){
-            ItemListView item = new ItemListView(locais.get(contador), R.drawable.andre);
+            ItemListView item = new ItemListView(locais.get(contador), R.drawable.ic_a_ativo);
             itens.add(item);
         }
 

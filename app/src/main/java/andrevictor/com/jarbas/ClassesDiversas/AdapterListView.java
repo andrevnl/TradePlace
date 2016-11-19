@@ -1,4 +1,4 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.ClassesDiversas;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,8 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
+
+import andrevictor.com.jarbas.R;
 
 /**
  * Created by SENAI on 12/11/2016.
@@ -71,6 +72,11 @@ public class AdapterListView extends BaseAdapter
         //ao item e definimos as informações.
         ((TextView) view.findViewById(R.id.text)).setText(item.getTexto());
         ((ImageView) view.findViewById(R.id.imagemview)).setImageResource(item.getIconeRid());
+
+        //Aqui muda as coisas direto na linha da kist
+        if(position != 1){
+           // view.setBackgroundColor(Color.BLUE);
+        }
 
         return view;
     }

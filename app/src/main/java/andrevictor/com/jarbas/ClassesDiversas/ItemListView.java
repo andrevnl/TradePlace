@@ -1,4 +1,4 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.ClassesDiversas;
 
 /**
  * Created by SENAI on 12/11/2016.

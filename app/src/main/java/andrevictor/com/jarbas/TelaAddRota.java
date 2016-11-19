@@ -24,7 +24,7 @@ import android.widget.Toast;
 import static andrevictor.com.jarbas.MainActivity.arrayAdapter;
 import static andrevictor.com.jarbas.MainActivity.locais;
 
-public class Main2Activity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class TelaAddRota extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     FloatingActionButton btnAddRota;
     EditText localizacaoAtual;
@@ -68,7 +68,7 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
             public void onClick(View view) {
                 Snackbar.make(view, "Adicionar rota", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                //Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                //Intent intent = new Intent(getApplicationContext(), Mtivity.class);
                 // Bundle bundle = new Bundle();
                 // bundle.putInt("posicao",position);
                 // intent.putExtras(bundle);
@@ -121,7 +121,7 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
                 .setIcon(R.drawable.ic_history_black_24dp)
                 .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(Main2Activity.this, "E-mail enviado",
+                        Toast.makeText(TelaAddRota.this, "E-mail enviado",
                                 Toast.LENGTH_SHORT).show();
                         //Colocar metodo para mandar solicitação para o back mandar o e-mail
                     }

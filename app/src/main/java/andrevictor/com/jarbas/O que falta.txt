@@ -1,7 +1,0 @@
-Tela principal :
-
-1 ) Ver como fazer a listview ficar só com um item disponivel para clicar
-
-Tela de detalhes :
-
-1) Ver como fazer a textview ficar certinha em qualquer tela do lado do botão

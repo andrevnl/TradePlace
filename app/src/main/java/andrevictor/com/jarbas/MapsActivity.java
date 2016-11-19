@@ -11,12 +11,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +33,10 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+
+import andrevictor.com.jarbas.API.Direcoes;
+import andrevictor.com.jarbas.ClassesDiversas.AdapterListView;
+import andrevictor.com.jarbas.ClassesDiversas.ItemListView;
 
 public class MapsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener {
 
@@ -79,7 +81,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View view) {
                 Snackbar.make(view, "Finalizar rota", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                //Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                //Intent intent = new Intent(getApplicationContext(), Mainvity.class);
                 // Bundle bundle = new Bundle();
                 // bundle.putInt("posicao",position);
                 // intent.putExtras(bundle);
@@ -136,7 +138,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         for ( contador = 0; contador < lugares.size(); contador++){
-            ItemListView item = new ItemListView(lugares.get(contador), R.drawable.andre);
+            ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_mm);
             itens.add(item);
         }
 

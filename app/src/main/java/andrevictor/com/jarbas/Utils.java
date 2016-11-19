@@ -1,7 +1,5 @@
 package andrevictor.com.jarbas;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -10,13 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import andrevictor.com.jarbas.API.Direcoes;
+import andrevictor.com.jarbas.API.NetworkUtils;
 
 import static andrevictor.com.jarbas.MapsActivity.lugares;
 import static andrevictor.com.jarbas.MapsActivity.listlatlong;
