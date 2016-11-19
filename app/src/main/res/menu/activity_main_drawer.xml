@@ -17,16 +17,26 @@
     </group>
 
     <item android:title="SISTEMA">
-        <menu>
-            <item
-                android:id="@+id/nav_informacoes"
-                android:icon="@drawable/ic_menu_help"
-                android:title="Informações" />
-            <item
-                android:id="@+id/nav_sair"
-                android:icon="@drawable/ic_cancel_black_24dp"
-                android:title="Sair" />
-        </menu>
+    <menu>
+        <item
+            android:id="@+id/nav_informacoes"
+            android:icon="@drawable/ic_menu_help"
+            android:title="Informações" />
+        <item
+            android:id="@+id/nav_sair"
+            android:icon="@drawable/ic_cancel_black_24dp"
+            android:title="Sair" />
+    </menu>
     </item>
 
+    <item android:title="">
+    <menu>
+        <item
+            android:id="@+id/nav_trade"
+            android:icon="@drawable/ic_add_white_24px"
+            android:title="TRADE FORCE"
+             />
+    </menu>
+    </item>
 </menu>
+

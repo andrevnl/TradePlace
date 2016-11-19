@@ -54,7 +54,6 @@ public class Utils {
             JSONObject objLe = objLegs.getJSONObject(0);
             JSONArray objSteps = objLe.getJSONArray("steps");//subclasse de "legs" / onde fica os passos /É um array
 
-            Log.i("objecSteps", ""+objSteps.length());
 
             for (cont = 0; cont < objSteps.length(); cont++){
                 JSONObject objHtml = objSteps.getJSONObject(cont);
@@ -68,6 +67,10 @@ public class Utils {
                     listlatlong.add(p);
                 }
             }
+
+            Log.i("obj",""+ obj);
+            Log.i("pol", ""+listlatlong);
+
 
             return direcoes;
         }catch (JSONException e){
