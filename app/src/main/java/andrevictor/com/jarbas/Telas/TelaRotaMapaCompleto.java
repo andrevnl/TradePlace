@@ -1,6 +1,5 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.Telas;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -15,11 +14,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
+import andrevictor.com.jarbas.R;
 
-import static andrevictor.com.jarbas.MapsActivity.listlatlong;
+import static andrevictor.com.jarbas.Telas.TelaRota.listlatlong;
 
-public class MapsActivityCompleto extends FragmentActivity implements OnMapReadyCallback {
+public class TelaRotaMapaCompleto extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private Polyline polyline;

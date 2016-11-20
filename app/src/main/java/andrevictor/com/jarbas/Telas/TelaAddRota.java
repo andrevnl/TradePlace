@@ -1,4 +1,4 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.Telas;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,8 +21,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import static andrevictor.com.jarbas.MainActivity.arrayAdapter;
-import static andrevictor.com.jarbas.MainActivity.locais;
+import andrevictor.com.jarbas.R;
+import andrevictor.com.jarbas.TelaInformacoes;
+import andrevictor.com.jarbas.TelaPerfil;
+
+import static andrevictor.com.jarbas.TelaPrincipal.arrayAdapter;
+import static andrevictor.com.jarbas.TelaPrincipal.locais;
 
 public class TelaAddRota extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -130,12 +134,12 @@ public class TelaAddRota extends AppCompatActivity implements NavigationView.OnN
                 .show();
     } else if (id == R.id.nav_perfil) {
         //Vai pro perfil
-        Intent intent = new Intent(getApplicationContext(), MainPerfilActivity.class);
+        Intent intent = new Intent(getApplicationContext(), TelaPerfil.class);
         startActivity(intent);
         finish();
     }else if (id == R.id.nav_informacoes) {
         //Vai pro informacoes
-        Intent intent = new Intent(getApplicationContext(), MainInformacoesActivity.class);
+        Intent intent = new Intent(getApplicationContext(), TelaInformacoes.class);
         startActivity(intent);
         finish();
     } else if (id == R.id.nav_sair) {

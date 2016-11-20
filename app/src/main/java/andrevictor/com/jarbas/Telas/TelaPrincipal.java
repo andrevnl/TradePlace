@@ -1,4 +1,4 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.Telas;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,8 +31,12 @@ import java.util.ArrayList;
 
 import andrevictor.com.jarbas.ClassesDiversas.AdapterListView;
 import andrevictor.com.jarbas.ClassesDiversas.ItemListView;
+import andrevictor.com.jarbas.ClassesDiversas.PermissionUtils;
+import andrevictor.com.jarbas.ClassesDiversas.TypefaceUtil;
+import andrevictor.com.jarbas.R;
+import andrevictor.com.jarbas.TelaRota;
 
-public class MainActivity extends AppCompatActivity
+public class TelaPrincipal extends AppCompatActivity
         implements AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
     //Array que copulam a listview (verificar se vai precisar de todos)
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity
         listaPrincipal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                Intent intent = new Intent(getApplicationContext(), TelaRota.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("posicao",position);
                 intent.putExtras(bundle);
@@ -217,7 +221,7 @@ public class MainActivity extends AppCompatActivity
                     .setIcon(R.drawable.ic_history_black_24dp)
                     .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(MainActivity.this, "E-mail enviado",
+                            Toast.makeText(TelaPrincipal.this, "E-mail enviado",
                                     Toast.LENGTH_SHORT).show();
                             //Colocar metodo para mandar solicitação para o back mandar o e-mail
                         }
@@ -226,11 +230,11 @@ public class MainActivity extends AppCompatActivity
                     .show();
         } else if (id == R.id.nav_perfil) {
             //Vai pro perfil
-            Intent intent = new Intent(getApplicationContext(), MainPerfilActivity.class);
+            Intent intent = new Intent(getApplicationContext(), TelaPerfil.class);
             startActivity(intent);
         }else if (id == R.id.nav_informacoes) {
             //Vai pro informacoes
-            Intent intent = new Intent(getApplicationContext(), MainInformacoesActivity.class);
+            Intent intent = new Intent(getApplicationContext(), TelaInformacoes.class);
             startActivity(intent);
         } else if (id == R.id.nav_sair) {
             //Colocar metodo para voltar para o login e senha

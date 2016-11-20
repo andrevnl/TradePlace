@@ -1,4 +1,4 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.ClassesDiversas;
 
 import android.content.Context;
 import android.graphics.Typeface;

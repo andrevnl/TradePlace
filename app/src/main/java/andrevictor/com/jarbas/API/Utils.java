@@ -1,4 +1,4 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.API;
 
 import android.util.Log;
 
@@ -14,8 +14,8 @@ import java.util.List;
 import andrevictor.com.jarbas.API.Direcoes;
 import andrevictor.com.jarbas.API.NetworkUtils;
 
-import static andrevictor.com.jarbas.MapsActivity.lugares;
-import static andrevictor.com.jarbas.MapsActivity.listlatlong;
+import static andrevictor.com.jarbas.TelaRota.lugares;
+import static andrevictor.com.jarbas.TelaRota.listlatlong;
 
 
 public class Utils {

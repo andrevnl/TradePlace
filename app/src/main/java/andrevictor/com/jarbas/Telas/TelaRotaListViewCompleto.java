@@ -1,4 +1,4 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.Telas;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,9 +16,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import static andrevictor.com.jarbas.MapsActivity.lugares;
+import andrevictor.com.jarbas.R;
 
-public class MainListCompleto extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import static andrevictor.com.jarbas.Telas.TelaRota.lugares;
+
+public class TelaRotaListViewCompleto extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     ListView listaCompleta;
     static ArrayAdapter arrayAdapter;
@@ -98,7 +100,7 @@ public class MainListCompleto extends AppCompatActivity implements NavigationVie
                     .setIcon(R.drawable.ic_history_black_24dp)
                     .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(MainListCompleto.this, "E-mail enviado",
+                            Toast.makeText(TelaRotaListViewCompleto.this, "E-mail enviado",
                                     Toast.LENGTH_SHORT).show();
                             //Colocar metodo para mandar solicitação para o back mandar o e-mail
                         }
@@ -107,12 +109,12 @@ public class MainListCompleto extends AppCompatActivity implements NavigationVie
                     .show();
         } else if (id == R.id.nav_perfil) {
             //Vai pro perfil
-            Intent intent = new Intent(getApplicationContext(), MainPerfilActivity.class);
+            Intent intent = new Intent(getApplicationContext(), TelaPerfil.class);
             startActivity(intent);
             finish();
         }else if (id == R.id.nav_informacoes) {
             //Vai pro informacoes
-            Intent intent = new Intent(getApplicationContext(), MainInformacoesActivity.class);
+            Intent intent = new Intent(getApplicationContext(), TelaInformacoes.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_sair) {

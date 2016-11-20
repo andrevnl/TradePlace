@@ -1,4 +1,4 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.ClassesDiversas;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;

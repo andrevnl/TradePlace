@@ -1,12 +1,9 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.Telas;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,10 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
-public class MainInformacoesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+import andrevictor.com.jarbas.R;
+import andrevictor.com.jarbas.TelaPerfil;
+
+public class TelaInformacoes extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +90,7 @@ public class MainInformacoesActivity extends AppCompatActivity implements Naviga
                     .setIcon(R.drawable.ic_history_black_24dp)
                     .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(MainInformacoesActivity.this, "E-mail enviado",
+                            Toast.makeText(TelaInformacoes.this, "E-mail enviado",
                                     Toast.LENGTH_SHORT).show();
                             //Colocar metodo para mandar solicitação para o back mandar o e-mail
                         }
@@ -100,7 +99,7 @@ public class MainInformacoesActivity extends AppCompatActivity implements Naviga
                     .show();
         } else if (id == R.id.nav_perfil) {
             //Vai pro perfil
-            Intent intent = new Intent(getApplicationContext(), MainPerfilActivity.class);
+            Intent intent = new Intent(getApplicationContext(), TelaPerfil.class);
             startActivity(intent);
             finish();
         }else if (id == R.id.nav_informacoes) {

@@ -1,4 +1,4 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.Telas;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -35,18 +35,20 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 
 import andrevictor.com.jarbas.API.Direcoes;
+import andrevictor.com.jarbas.API.Utils;
 import andrevictor.com.jarbas.ClassesDiversas.AdapterListView;
 import andrevictor.com.jarbas.ClassesDiversas.ItemListView;
+import andrevictor.com.jarbas.R;
 
-public class MapsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener {
+public class TelaRota extends AppCompatActivity implements AdapterView.OnItemClickListener,OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener {
 
     //Array que copulam a listview
-    static ArrayList<String> lugares;
+    public static ArrayList<String> lugares;
     static ArrayAdapter arrayAdapter;
     private Polyline polyline;
     private AdapterListView adapterListView;
     private ArrayList<ItemListView> itens;
-    static ArrayList<LatLng> listlatlong;
+    public static ArrayList<LatLng> listlatlong;
 
     String origem = "-23.545991,%20-46.913044";    // "-25.443195,%20-49.280977";
     String destino = "-23.536249,%20-46.646157";   //"-25.442207,%20-49.278403";
@@ -110,7 +112,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
         listaPrincipal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), MainListCompleto.class);
+                Intent intent = new Intent(getApplicationContext(), TelaListViewCompleto.class);
                 //Bundle bundle = new Bundle();
                 //bundle.putInt("posicao",position);
                 //intent.putExtras(bundle);
@@ -198,7 +200,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
                     .setIcon(R.drawable.ic_history_black_24dp)
                     .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(MapsActivity.this, "E-mail enviado",
+                            Toast.makeText(TelaRota.this, "E-mail enviado",
                                     Toast.LENGTH_SHORT).show();
                             //Colocar metodo para mandar solicitação para o back mandar o e-mail
                         }
@@ -207,12 +209,12 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
                     .show();
         } else if (id == R.id.nav_perfil) {
             //Vai pro perfil
-            Intent intent = new Intent(getApplicationContext(), MainPerfilActivity.class);
+            Intent intent = new Intent(getApplicationContext(), TelaPerfil.class);
             startActivity(intent);
             finish();
         }else if (id == R.id.nav_informacoes) {
             //Vai pro informacoes
-            Intent intent = new Intent(getApplicationContext(), MainInformacoesActivity.class);
+            Intent intent = new Intent(getApplicationContext(), TelaInformacoes.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_sair) {
@@ -280,7 +282,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         protected void onPreExecute(){
-            load = ProgressDialog.show(MapsActivity.this, "Por favor Aguarde ...", "Recuperando Informações do Servidor...");
+            load = ProgressDialog.show(TelaRota.this, "Por favor Aguarde ...", "Recuperando Informações do Servidor...");
         }
 
         @Override
@@ -305,7 +307,7 @@ public class MapsActivity extends AppCompatActivity implements AdapterView.OnIte
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
-                    Intent intent = new Intent(getApplicationContext(), MapsActivityCompleto.class);
+                    Intent intent = new Intent(getApplicationContext(), TelaMapaCompleto.class);
                     startActivity(intent);
                 }
             });

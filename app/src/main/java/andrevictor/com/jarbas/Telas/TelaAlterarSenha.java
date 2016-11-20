@@ -1,9 +1,11 @@
-package andrevictor.com.jarbas;
+package andrevictor.com.jarbas.Telas;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class AlterarSenha extends AppCompatActivity {
+import andrevictor.com.jarbas.R;
+
+public class TelaAlterarSenha extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
