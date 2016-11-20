@@ -11,12 +11,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import andrevictor.com.jarbas.API.Direcoes;
-import andrevictor.com.jarbas.API.NetworkUtils;
+import static andrevictor.com.jarbas.Telas.TelaRota.lugares;
+import static andrevictor.com.jarbas.Telas.TelaRota.listlatlong;
 
-import static andrevictor.com.jarbas.TelaRota.lugares;
-import static andrevictor.com.jarbas.TelaRota.listlatlong;
 
+//Classe que pega o json e o objeto e atribui um ao outro (Não explicou nada, mas ta valendo)
 
 public class Utils {
 

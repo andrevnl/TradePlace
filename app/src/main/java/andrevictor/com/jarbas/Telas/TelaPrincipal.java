@@ -34,7 +34,6 @@ import andrevictor.com.jarbas.ClassesDiversas.ItemListView;
 import andrevictor.com.jarbas.ClassesDiversas.PermissionUtils;
 import andrevictor.com.jarbas.ClassesDiversas.TypefaceUtil;
 import andrevictor.com.jarbas.R;
-import andrevictor.com.jarbas.TelaRota;
 
 public class TelaPrincipal extends AppCompatActivity
         implements AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
@@ -64,7 +63,7 @@ public class TelaPrincipal extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_principal);
 
         //Muda a fonte padrão
         TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "font/Roboto-Regular.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf

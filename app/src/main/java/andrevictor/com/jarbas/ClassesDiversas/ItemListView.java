@@ -2,6 +2,7 @@ package andrevictor.com.jarbas.ClassesDiversas;
 
 /**
  * Created by SENAI on 12/11/2016.
+ * Classe que cria o objeto para o AdapterListView
  */
 
 public class ItemListView {

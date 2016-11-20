@@ -10,6 +10,6 @@ public class TelaAlterarSenha extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alterar_senha);
+        setContentView(R.layout.activity_alterarsenha);
     }
 }

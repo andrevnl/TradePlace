@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by AndreVictor on 05/10/16.
+ * Classe que mexe com as permissões
  */
 
 public class PermissionUtils {

@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Created by AndreVictor on 08/10/16.
+ * Classe que cria o objeto para guardar os dados que precisa do json
  */
 
 public class Direcoes{

@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 
 /**
  * Created by SENAI on 12/11/2016.
+ * Classe que auxilia a troca da fonte principal
  */
 
 public class TypefaceUtil {

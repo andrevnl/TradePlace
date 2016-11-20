@@ -8,6 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+//Classe que entra em contato com o JSON e baixa ele da internet
+
 public class NetworkUtils {
 
     //Responsavel por carregar o Objeto JSON

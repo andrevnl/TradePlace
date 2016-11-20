@@ -22,11 +22,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import andrevictor.com.jarbas.R;
-import andrevictor.com.jarbas.TelaInformacoes;
-import andrevictor.com.jarbas.TelaPerfil;
 
-import static andrevictor.com.jarbas.TelaPrincipal.arrayAdapter;
-import static andrevictor.com.jarbas.TelaPrincipal.locais;
+import static andrevictor.com.jarbas.Telas.TelaPrincipal.arrayAdapter;
+import static andrevictor.com.jarbas.Telas.TelaPrincipal.locais;
 
 public class TelaAddRota extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -37,7 +35,7 @@ public class TelaAddRota extends AppCompatActivity implements NavigationView.OnN
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_addrota);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

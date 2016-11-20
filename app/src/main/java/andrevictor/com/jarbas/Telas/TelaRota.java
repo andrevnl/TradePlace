@@ -62,7 +62,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_rota);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragmentPrincipal);
@@ -112,7 +112,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         listaPrincipal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), TelaListViewCompleto.class);
+                Intent intent = new Intent(getApplicationContext(), TelaRotaListViewCompleto.class);
                 //Bundle bundle = new Bundle();
                 //bundle.putInt("posicao",position);
                 //intent.putExtras(bundle);
@@ -307,7 +307,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
-                    Intent intent = new Intent(getApplicationContext(), TelaMapaCompleto.class);
+                    Intent intent = new Intent(getApplicationContext(), TelaRotaMapaCompleto.class);
                     startActivity(intent);
                 }
             });

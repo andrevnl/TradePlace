@@ -13,6 +13,7 @@ import andrevictor.com.jarbas.R;
 
 /**
  * Created by SENAI on 12/11/2016.
+ * Classe que permite colocar a imageview e o textview na mesma linha do listview
  */
 
 public class AdapterListView extends BaseAdapter

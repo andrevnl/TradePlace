@@ -15,14 +15,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import andrevictor.com.jarbas.R;
-import andrevictor.com.jarbas.TelaPerfil;
 
 public class TelaInformacoes extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_informacoes);
+        setContentView(R.layout.activity_informacoes);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

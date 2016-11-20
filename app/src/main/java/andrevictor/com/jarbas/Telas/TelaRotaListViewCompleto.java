@@ -28,7 +28,7 @@ public class TelaRotaListViewCompleto extends AppCompatActivity implements Navig
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_list_completo);
+        setContentView(R.layout.activity_rotalistviewcompleto);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
