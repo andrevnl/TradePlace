@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,10 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -31,32 +28,37 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-
 import java.util.ArrayList;
-
 import andrevictor.com.jarbas.API.Direcoes;
 import andrevictor.com.jarbas.API.Utils;
 import andrevictor.com.jarbas.ClassesDiversas.AdapterListView;
 import andrevictor.com.jarbas.ClassesDiversas.ItemListView;
 import andrevictor.com.jarbas.R;
+import static andrevictor.com.jarbas.Telas.TelaPrincipal.adapterListView;
+import static andrevictor.com.jarbas.Telas.TelaPrincipal.itens;
+import static andrevictor.com.jarbas.Telas.TelaPrincipal.letrasVisitadas;
+import static andrevictor.com.jarbas.Telas.TelaPrincipal.linhaAtiva;
+import static andrevictor.com.jarbas.Telas.TelaPrincipal.listaPrincipal;
 
 public class TelaRota extends AppCompatActivity implements AdapterView.OnItemClickListener,OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener {
 
     //Array que copulam a listview
     public static ArrayList<String> lugares;
-    static ArrayAdapter arrayAdapter;
     private Polyline polyline;
-    private AdapterListView adapterListView;
-    private ArrayList<ItemListView> itens;
+    private AdapterListView adapterListViewRota;
+    private ArrayList<ItemListView> itensRota;
     public static ArrayList<LatLng> listlatlong;
 
-    String origem = "-23.545991,%20-46.913044";    // "-25.443195,%20-49.280977";
-    String destino = "-23.536249,%20-46.646157";   //"-25.442207,%20-49.278403";
+    //-23.546161, -46.913081 Casa
+    //-23.536544, -46.646308 Senai
+
+    String origem = "-23.546161,%20-46.913081";    // "-25.443195,%20-49.280977";
+    String destino = "-23.536544,%20-46.646308";   //"-25.442207,%20-49.278403";
 
     //Componentes
     private GoogleMap mMap;
     private ProgressDialog load;
-    ListView listaPrincipal;
+    ListView listaRota;
     FloatingActionButton btnFinalizarRota;
 
     @Override
@@ -68,9 +70,10 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
                 .findFragmentById(R.id.fragmentPrincipal);
         mapFragment.getMapAsync(this);
 
+        //Obtem a posicao do item clicado na lista da tela anterior
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        int PosicaoList = bundle.getInt("posicao");
+        final int PosicaoList = bundle.getInt("posicao");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,13 +84,14 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         btnFinalizarRota.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Finalizar rota", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                //Intent intent = new Intent(getApplicationContext(), Mainvity.class);
-                // Bundle bundle = new Bundle();
-                // bundle.putInt("posicao",position);
-                // intent.putExtras(bundle);
-                //startActivity(intent);
+                if(linhaAtiva == PosicaoList) {
+                    itens.get(linhaAtiva).setIconeRid(letrasVisitadas.get(linhaAtiva));
+                    listaPrincipal.setAdapter(adapterListView);
+                    linhaAtiva++;
+                    finish();
+                }else{
+                    finish();
+                }
             }
         });
 
@@ -107,15 +111,12 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
 
         GetJson download = new GetJson();
 
-        listaPrincipal = (ListView) findViewById(R.id.ListPrincipal);
+        listaRota = (ListView) findViewById(R.id.ListPrincipal);
 
-        listaPrincipal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listaRota.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), TelaRotaListViewCompleto.class);
-                //Bundle bundle = new Bundle();
-                //bundle.putInt("posicao",position);
-                //intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -124,33 +125,28 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         lugares = new ArrayList<>();
 
         createListView();
-        //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, lugares);
-        //listaPrincipal.setAdapter(arrayAdapter);
 
         //Chama Async Task
         download.execute();
     }
 
-    private void createListView()
-    {
+    private void createListView() {
         //Criamos nossa lista que preenchera o ListView
-        itens = new ArrayList<ItemListView>();
+        itensRota = new ArrayList<ItemListView>();
 
         int contador = 0;
 
 
         for ( contador = 0; contador < lugares.size(); contador++){
             ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_mm);
-            itens.add(item);
+            itensRota.add(item);
         }
 
         //Cria o adapter
-        adapterListView = new AdapterListView(this, itens);
+        adapterListViewRota = new AdapterListView(this, itensRota);
 
         //Define o Adapter
-        listaPrincipal.setAdapter(adapterListView);
-        //Cor quando a lista é selecionada para ralagem.
-        listaPrincipal.setCacheColorHint(Color.TRANSPARENT);
+        listaRota.setAdapter(adapterListViewRota);
     }
 
     //Todos os metodos abaixo tem a ver com o menu lateral
@@ -192,21 +188,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         if (id == R.id.nav_principal) {
             finish();
         } else if (id == R.id.nav_rotas) {
-            //Alerta do historico de rotas
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder
-                    .setTitle("Historico de rotas")
-                    .setMessage("Enviar historico por e-mail?")
-                    .setIcon(R.drawable.ic_history_black_24dp)
-                    .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(TelaRota.this, "E-mail enviado",
-                                    Toast.LENGTH_SHORT).show();
-                            //Colocar metodo para mandar solicitação para o back mandar o e-mail
-                        }
-                    })
-                    .setNegativeButton("Não", null)
-                    .show();
+            HistoricoDeRotas();
         } else if (id == R.id.nav_perfil) {
             //Vai pro perfil
             Intent intent = new Intent(getApplicationContext(), TelaPerfil.class);
@@ -218,7 +200,9 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_sair) {
-            //Colocar metodo para voltar para o login e senha
+            //Vai pra tela de login
+            Intent intent = new Intent(getApplicationContext(), TelaLogin.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -227,6 +211,62 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
     }
     //Fim dos metodos que tem a ver com o menu lateral
     /////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+
+    private class GetJson extends AsyncTask<Void, Void, Direcoes> {
+
+        @Override
+        protected void onPreExecute(){
+            load = ProgressDialog.show(TelaRota.this, "Por favor Aguarde ...", "Recuperando Informações do Servidor...");
+        }
+
+        @Override
+        protected Direcoes doInBackground(Void... params) {
+            Utils util = new Utils();
+            //return util.getInformacao("https://maps.googleapis.com/maps/api/directions/json?origin=-23.545991,%20-46.913044&destination=-23.536249,%20-46.646157&mode=transit&key=AIzaSyDe7az8c6z4jO2MQzuJLoG1gq2WpHATomc");
+            return util.getInformacao("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&mode=transit&language=pt-br&key=AIzaSyDe7az8c6z4jO2MQzuJLoG1gq2WpHATomc");
+        }
+
+        @Override
+        protected void onPostExecute(Direcoes direcoes){
+
+            //lugares.add(direcoes.getPreco());
+            createListView();
+
+            drawRoute();
+            load.dismiss();
+
+            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    Intent intent = new Intent(getApplicationContext(), TelaRotaMapaCompleto.class);
+                    startActivity(intent);
+                }
+            });
+        }
+    }
+
+    //Metodo para desenhar no mapa
+    public void drawRoute(){
+        PolylineOptions po;
+
+        if(polyline == null){
+            po = new PolylineOptions();
+            for(int i = 0, tam = listlatlong.size(); i < tam; i++){
+                po.add(listlatlong.get(i));
+            }
+
+            po.color(Color.BLACK).width(4);
+            polyline = mMap.addPolyline(po);
+        } else {
+            polyline.setPoints(listlatlong);
+        }
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -263,8 +303,8 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
 
         listlatlong = new ArrayList<LatLng>();
 
-       // listlatlong.add(pontoA);
-       // listlatlong.add(pontoB);
+        // listlatlong.add(pontoA);
+        // listlatlong.add(pontoB);
 
         mMap.addMarker(new MarkerOptions().title("teste").snippet("teste1").position(pontoA));
         mMap.addMarker(new MarkerOptions().title("teste").snippet("teste1").position(pontoB));
@@ -272,62 +312,22 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         //adicionaPolyline(mMap,pontoA,pontoB);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-    }
-
-
-    private class GetJson extends AsyncTask<Void, Void, Direcoes> {
-
-        @Override
-        protected void onPreExecute(){
-            load = ProgressDialog.show(TelaRota.this, "Por favor Aguarde ...", "Recuperando Informações do Servidor...");
-        }
-
-        @Override
-        protected Direcoes doInBackground(Void... params) {
-            Utils util = new Utils();
-            //return util.getInformacao("https://maps.googleapis.com/maps/api/directions/json?origin=-23.545991,%20-46.913044&destination=-23.536249,%20-46.646157&mode=transit&key=AIzaSyDe7az8c6z4jO2MQzuJLoG1gq2WpHATomc");
-            return util.getInformacao("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&mode=transit&language=pt-br&key=AIzaSyDe7az8c6z4jO2MQzuJLoG1gq2WpHATomc");
-        }
-
-        @Override
-        protected void onPostExecute(Direcoes direcoes){
-
-
-            //lugares.add(direcoes.getNomeLocal());
-            lugares.add(direcoes.getPreco());
-            //listaPrincipal.setAdapter(arrayAdapter);
-            createListView();
-
-            drawRoute();
-            load.dismiss();
-
-            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng latLng) {
-                    Intent intent = new Intent(getApplicationContext(), TelaRotaMapaCompleto.class);
-                    startActivity(intent);
-                }
-            });
-        }
-    }
-
-    //Metodo para desenhar no mapa
-    public void drawRoute(){
-        PolylineOptions po;
-
-        if(polyline == null){
-            po = new PolylineOptions();
-            for(int i = 0, tam = listlatlong.size(); i < tam; i++){
-                po.add(listlatlong.get(i));
-            }
-
-            po.color(Color.BLACK).width(4);
-            polyline = mMap.addPolyline(po);
-        } else {
-            polyline.setPoints(listlatlong);
-        }
+    public void HistoricoDeRotas(){
+        //Alerta do historico de rotas
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle("Historico de rotas")
+                .setMessage("Enviar historico por e-mail?")
+                .setIcon(R.drawable.ic_history_black_24dp)
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(TelaRota.this, "E-mail enviado",
+                                Toast.LENGTH_SHORT).show();
+                        //Colocar metodo para mandar solicitação para o back mandar o e-mail
+                    }
+                })
+                .setNegativeButton("Não", null)
+                .show();
     }
 }

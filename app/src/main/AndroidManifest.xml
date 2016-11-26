@@ -8,13 +8,17 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".Telas.TelaPrincipal"
             android:label="TradePlace"
@@ -59,12 +63,12 @@
         </activity>
         <activity
             android:name=".Telas.TelaRotaMapaCompleto"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Telas.TelaRotaListViewCompleto"
-            android:screenOrientation="portrait"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Telas.TelaPerfil"
@@ -75,8 +79,11 @@
             android:name=".Telas.TelaInformacoes"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Telas.TelaAlterarSenha"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Telas.TelaAlterarSenha" />
+        <activity
+            android:name=".TelaLogin"
+            android:label="@string/title_activity_tela_login"></activity>
     </application>
 
 </manifest>

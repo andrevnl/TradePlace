@@ -3,9 +3,12 @@ package andrevictor.com.jarbas.Telas;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,19 +19,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.util.ArrayList;
-
 import andrevictor.com.jarbas.ClassesDiversas.AdapterListView;
 import andrevictor.com.jarbas.ClassesDiversas.ItemListView;
 import andrevictor.com.jarbas.ClassesDiversas.PermissionUtils;
@@ -39,16 +38,20 @@ public class TelaPrincipal extends AppCompatActivity
         implements AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
     //Array que copulam a listview (verificar se vai precisar de todos)
-    //static ArrayList<String> lugares;
-    static ArrayList<String> latlonglocais;
-    static ArrayList<String> locais;
-    private AdapterListView adapterListView;
-    private ArrayList<ItemListView> itens;
-    static ArrayAdapter arrayAdapter;
+    public static ArrayList<String> locais;
+    public static AdapterListView adapterListView;
+    private ArrayList<Integer> letrasDesativadas;
+    private ArrayList<Integer> letrasAtivas;
+    public static ArrayList<Integer> letrasVisitadas;
+    public static ArrayList<ItemListView> itens;
+    private ItemListView item;
+
+    int contador = 0;
+    public static int linhaAtiva = 0;
 
     //Componentes
     GoogleMap mapa;
-    ListView listaPrincipal;
+    public static ListView listaPrincipal;
     SupportMapFragment mapFragment;
     FloatingActionButton btnAddButton;
 
@@ -62,25 +65,28 @@ public class TelaPrincipal extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_principal);
 
         //Muda a fonte padrão
         TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "font/Roboto-Regular.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
         TypefaceUtil.overrideFont(getApplicationContext(), "monospace", "font/Roboto-Regular.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
         TypefaceUtil.overrideFont(getApplicationContext(), "normal", "font/Roboto-Regular.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_principal);
 
         //Chama a classe de permissoes para validacao
         PermissionUtils.validate(this,0,permissoes);
 
         //Parte da declaracao dos elementos da tela
         ///////////////////////////////////////////////////////////////////////////////
-        //Lista com os locais que precisam ser visitados
+        //Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //ListView com os locais que precisam ser visitados
         listaPrincipal = (ListView) findViewById(R.id.ListPrincipal);
+
+
 
         //Fragmento do mapa
          mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -92,19 +98,12 @@ public class TelaPrincipal extends AppCompatActivity
         btnAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Criar nova rota", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
                 Intent intent = new Intent(getApplicationContext(), TelaAddRota.class);
-               // Bundle bundle = new Bundle();
-               // bundle.putInt("posicao",position);
-               // intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
         //Fim da parte de criar elementos da tela
         ///////////////////////////////////////////////////////////////////////////////
-
-        //Por enquanto não vai usar pq no outro tem o listview com o icone e a imagem
 
         //Copula o array e joga na listview
         ///////////////////////////////////////////////////////////////////////////////
@@ -115,25 +114,71 @@ public class TelaPrincipal extends AppCompatActivity
         locais.add("EXTRA PAULISTA");
         locais.add("PÃO DE AÇÚCAR ANA ROSA");
         locais.add("CARREFOUR ANA ROSA");
-
-        //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, locais);
-        //listaPrincipal.setAdapter(arrayAdapter);
         ///////////////////////////////////////////////////////////////////////////////
+        //Copula o array e joga as imagens das letras que vao ser usadas na listview para representar ativo, desativado e ja visitado
+        ///////////////////////////////////////////////////////////////////////////////
+        letrasDesativadas = new ArrayList<>();
+        letrasDesativadas.add(R.drawable.ic_a_desativado);
+        letrasDesativadas.add(R.drawable.ic_b_desativado);
+        letrasDesativadas.add(R.drawable.ic_c_desativado);
+        letrasDesativadas.add(R.drawable.ic_d_desativado);
+        letrasDesativadas.add(R.drawable.ic_e_desativado);
+        letrasDesativadas.add(R.drawable.ic_f_desativado);
+        letrasDesativadas.add(R.drawable.ic_g_desativado);
+        letrasDesativadas.add(R.drawable.ic_h_desativado);
+        letrasAtivas = new ArrayList<>();
+        letrasAtivas.add(R.drawable.ic_a_ativo);
+        letrasAtivas.add(R.drawable.ic_b_ativo);
+        letrasAtivas.add(R.drawable.ic_c_ativo);
+        letrasAtivas.add(R.drawable.ic_d_ativo);
+        letrasAtivas.add(R.drawable.ic_e_ativo);
+        letrasAtivas.add(R.drawable.ic_f_ativo);
+        letrasAtivas.add(R.drawable.ic_g_ativo);
+        letrasAtivas.add(R.drawable.ic_h_ativo);
+        letrasVisitadas = new ArrayList<>();
+        letrasVisitadas.add(R.drawable.ic_a_visitado);
+        letrasVisitadas.add(R.drawable.ic_b_visitado);
+        letrasVisitadas.add(R.drawable.ic_c_visitado);
+        letrasVisitadas.add(R.drawable.ic_d_visitado);
+        letrasVisitadas.add(R.drawable.ic_e_visitado);
+        letrasVisitadas.add(R.drawable.ic_f_visitado);
+        letrasVisitadas.add(R.drawable.ic_g_visitado);
+        letrasVisitadas.add(R.drawable.ic_h_visitado);
+        ////////////////////////////////////////////////////////////////////////////////
+
+
 
         //OnClick da lista que chama a outra tela e passa as informacoes da rota (verificar se vai ser assim mesmo)
         ///////////////////////////////////////////////////////////////////////////////
         listaPrincipal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), TelaRota.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("posicao",position);
-                intent.putExtras(bundle);
-                startActivity(intent);
+
+                if(position == linhaAtiva) {
+                    Intent intent = new Intent(getApplicationContext(), TelaRota.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("posicao", position);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+
+                    itens.get(linhaAtiva).setIconeRid(letrasAtivas.get(linhaAtiva));
+                    listaPrincipal.setAdapter(adapterListView);
+                }else if(position < linhaAtiva){
+                    Intent intent = new Intent(getApplicationContext(), TelaRota.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("posicao", position);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+
+                else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TelaPrincipal.this);
+                    builder.setTitle("Rota inativa").setMessage("Favor finalizar rota anterior para habilitar essa rota!").setIcon(R.drawable.ic_error_outline_black_24dp).show();
+                }
             }
         });
-        ///////////////////////////////////////////////////////////////////////////////
 
+        ///////////////////////////////////////////////////////////////////////////////
 
         //Comeco da parte que mexe com menu lateral
         //////////////////////////////////////////////////////////////////////////////
@@ -151,16 +196,14 @@ public class TelaPrincipal extends AppCompatActivity
         createListView();
     }
 
-    private void createListView()
-    {
+    private void createListView() {
         //Criamos nossa lista que preenchera o ListView
         itens = new ArrayList<ItemListView>();
 
-        int contador = 0;
 
 
-        for ( contador = 0; contador < locais.size(); contador++){
-            ItemListView item = new ItemListView(locais.get(contador), R.drawable.ic_a_ativo);
+        for (contador = 0; contador < locais.size(); contador++){
+            item = new ItemListView(locais.get(contador), letrasDesativadas.get(contador));
             itens.add(item);
         }
 
@@ -171,8 +214,56 @@ public class TelaPrincipal extends AppCompatActivity
         listaPrincipal.setAdapter(adapterListView);
     }
 
+    //Parte que mexe com o mapa desde a criacao no app
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mapa = googleMap;
+
+        mapa.getUiSettings().setAllGesturesEnabled(false);
+
+        LatLng ponto = new LatLng(-23.581485,-46.638507);
+        LatLng ponto2 = new LatLng(-23.581465,-46.638503);
+        mapa.addMarker(new MarkerOptions().position(ponto));
+        mapa.addMarker(new MarkerOptions().position(ponto2));
+
+
+        //Dar zoom no mapa
+        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(ponto,12));
+    }
+
     //Todos os metodos abaixo tem a ver com o menu lateral
     /////////////////////////////////////////////////////////////////////////////////
+
+    //Acao dos botoes do menu lateral aqui
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_principal) {
+            //Esse já e o main então não tem nada aqui
+        } else if (id == R.id.nav_rotas) {
+            HistoricoDeRotas();
+        } else if (id == R.id.nav_perfil) {
+            //Vai pro perfil
+            Intent intent = new Intent(getApplicationContext(), TelaPerfil.class);
+            startActivity(intent);
+        }else if (id == R.id.nav_informacoes) {
+            //Vai pro informacoes
+            Intent intent = new Intent(getApplicationContext(), TelaInformacoes.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_sair) {
+            //Vai pra tela de login
+            Intent intent = new Intent(getApplicationContext(), TelaLogin.class);
+            startActivity(intent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
     //Faz aparecer o menu passando o dedo para o lado
     @Override
     public void onBackPressed() {
@@ -201,70 +292,11 @@ public class TelaPrincipal extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_principal) {
-                    //Esse já e o main então não tem nada aqui
-        } else if (id == R.id.nav_rotas) {
-            //Alerta do historico de rotas
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder
-                    .setTitle("Historico de rotas")
-                    .setMessage("Enviar historico por e-mail?")
-                    .setIcon(R.drawable.ic_history_black_24dp)
-                    .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(TelaPrincipal.this, "E-mail enviado",
-                                    Toast.LENGTH_SHORT).show();
-                            //Colocar metodo para mandar solicitação para o back mandar o e-mail
-                        }
-                    })
-                    .setNegativeButton("Não", null)
-                    .show();
-        } else if (id == R.id.nav_perfil) {
-            //Vai pro perfil
-            Intent intent = new Intent(getApplicationContext(), TelaPerfil.class);
-            startActivity(intent);
-        }else if (id == R.id.nav_informacoes) {
-            //Vai pro informacoes
-            Intent intent = new Intent(getApplicationContext(), TelaInformacoes.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_sair) {
-            //Colocar metodo para voltar para o login e senha
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
     //Fim dos metodos que tem a ver com o menu lateral
     /////////////////////////////////////////////////////////////////////////////////
 
 
-    //Parte que mexe com o mapa desde a criacao no app
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mapa = googleMap;
-
-        mapa.getUiSettings().setAllGesturesEnabled(false);
-
-        LatLng ponto = new LatLng(-23.581485,-46.638507);
-        LatLng ponto2 = new LatLng(-23.581465,-46.638503);
-        mapa.addMarker(new MarkerOptions().position(ponto));
-        mapa.addMarker(new MarkerOptions().position(ponto2));
-
-
-        //Dar zoom no mapa
-        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(ponto,12));
-    }
-
-    //Parte que mexe com permissoes (Verificar para Android 5.0 e 4.0)
+    //Parte que mexe com permissoes
     /////////////////////////////////////////////////////////////////////////////////
     //O proprio Android tem que chamar esse metodo caso precise de alguma permissao
     @Override
@@ -296,12 +328,29 @@ public class TelaPrincipal extends AppCompatActivity
             dialog.show();
         }
     }
-
     //Fim da parte que mexe com permissoes
     /////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
     }
+
+    public void HistoricoDeRotas(){
+        //Alerta do historico de rotas
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle("Historico de rotas")
+                .setMessage("Enviar historico por e-mail?")
+                .setIcon(R.drawable.ic_history_black_24dp)
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(TelaPrincipal.this, "E-mail enviado",
+                                Toast.LENGTH_SHORT).show();
+                        //Colocar metodo para mandar solicitação para o back mandar o e-mail
+                    }
+                })
+                .setNegativeButton("Não", null)
+                .show();
+    }
+
 }

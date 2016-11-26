@@ -19,7 +19,8 @@ import static andrevictor.com.jarbas.Telas.TelaRota.listlatlong;
 
 public class Utils {
 
-    int cont = 0;
+    int contG = 0;
+    int contP = 0;
 
     public Direcoes getInformacao(String end){
             String json;
@@ -34,38 +35,72 @@ public class Utils {
         try {
             Direcoes direcoes = new Direcoes(); //Cria o objeto direcoes
 
-
-
             JSONObject result = new JSONObject(json); //Pega o JSON
             JSONArray routes = result.getJSONArray("routes"); //Pega a maior classe para depois pegar o que tem dentro dela
-
             JSONObject objArray = routes.getJSONObject(0); //Seta o primeiro objeto (So tem um se eu entendi direito)
+            JSONObject obj = objArray.getJSONObject("fare"); //subclasse de "routes" / onde fica o preco da passagem / isso e um objeto e so to nele para pegar o valor
+            JSONArray obj1 = objArray.getJSONArray("legs");//subclasse de "routes" /É um array
+            JSONObject objLegs = obj1.getJSONObject(0); //subclasse de "routes" / Aqui estou na legs
+            JSONArray objSteps = objLegs.getJSONArray("steps");//subclasse de "legs" / onde fica os passos /É um array
 
-            JSONObject obj = objArray.getJSONObject("fare"); //subclasse de "routes" / onde fica o preco da passagem
-            direcoes.setPreco(obj.getString("text")); //Aqui pego o valor da passagem total
+            //O que ta aqui em baixo e o que to pegando para usar no programa
 
-            JSONArray objLegs = objArray.getJSONArray("legs");//subclasse de "routes" /É um array
+            lugares.add(objLegs.getString("start_address")); //Endereco inicial
 
-            JSONObject objLe = objLegs.getJSONObject(0);
-            JSONArray objSteps = objLe.getJSONArray("steps");//subclasse de "legs" / onde fica os passos /É um array
+            String s = "0x00000000";
 
+            System.out.println(s.substring(s.indexOf("x")+1));
+            System.out.println(s.substring(s.indexOf("x")+1, s.length()));
 
-            for (cont = 0; cont < objSteps.length(); cont++){
-                JSONObject objHtml = objSteps.getJSONObject(cont);
-                lugares.add(objHtml.getString("html_instructions"));
+            Log.i("Vamos", s.substring(s.indexOf("x")+1));
+            Log.i("Vamos", json.substring(json.indexOf("end_address")+1));
 
-                String polyline = objSteps.getJSONObject(cont).getJSONObject("polyline").getString("points");
+            String polyline = "";
 
-                Log.i("polyline",polyline);
+            while(contG < objSteps.length()){
+                if(objSteps.getJSONObject(contG).getJSONArray("steps").isNull(contG)){
+                    while (contP < objSteps.getJSONObject(contG).getJSONArray("steps").length()){
+                        lugares.add(objSteps.getJSONObject(contG).getJSONArray("steps").getJSONObject(contP).getString("html_instructions"));
 
+                        polyline = objSteps.getJSONObject(contG).getJSONArray("steps").getJSONObject(contP).getJSONObject("polyline").getString("points");
+                        for(LatLng p : decodePolyline(polyline)) {
+                            listlatlong.add(p);
+                        }
+
+                        contP++;
+                    }
+                }
+
+                //HTML Instrutions dos grandes Steps
+                lugares.add(objSteps.getJSONObject(contG).getString("html_instructions"));
+
+                //Log.i("contG", ""+contG);
+                //Log.i("contP", ""+contP);
+                //Log.i("contSteps", ""+objSteps.getJSONObject(1));
+                //Log.i("contStepsSteps", ""+objSteps.getJSONObject(0).getJSONArray("steps").isNull(0));
+
+                //Points dos grandes Steps
+                polyline = objSteps.getJSONObject(contG).getJSONObject("polyline").getString("points");
                 for(LatLng p : decodePolyline(polyline)) {
                     listlatlong.add(p);
                 }
+
+                contG++;
+                contP = 0;
+
+                Log.i("contG", ""+contG);
+                Log.i("contP", ""+contP);
+                Log.i("contV", ""+ (objSteps.getJSONObject(contG).getJSONArray("steps") != null));
+
             }
 
-            Log.i("obj",""+ obj);
-            Log.i("pol", ""+listlatlong);
+            lugares.add(objLegs.getString("end_address")); //Endereco final
 
+            direcoes.setPreco(obj.getString("text")); //Aqui pego o texto com o valor da passagem total
+            direcoes.setStartLatitude(objSteps.getJSONObject(0).getJSONObject("start_location").getString("lat"));
+            direcoes.setStartLatitude(objSteps.getJSONObject(0).getJSONObject("start_location").getString("lng"));
+            direcoes.setStartLatitude(objSteps.getJSONObject(0).getJSONObject("end_location").getString("lat"));
+            direcoes.setStartLatitude(objSteps.getJSONObject(0).getJSONObject("end_location").getString("lng"));
 
             return direcoes;
         }catch (JSONException e){

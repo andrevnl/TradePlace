@@ -64,7 +64,7 @@ public class AdapterListView extends BaseAdapter
     @Override
     public View getView(int position, View view, ViewGroup parent)
     {
-        //Pega o item de acordo com a posção.
+        //Pega o item de acordo com a posição.
         ItemListView item = itens.get(position);
         //infla o layout para podermos preencher os dados
         view = mInflater.inflate(R.layout.item_list, null);
@@ -73,11 +73,6 @@ public class AdapterListView extends BaseAdapter
         //ao item e definimos as informações.
         ((TextView) view.findViewById(R.id.text)).setText(item.getTexto());
         ((ImageView) view.findViewById(R.id.imagemview)).setImageResource(item.getIconeRid());
-
-        //Aqui muda as coisas direto na linha da kist
-        if(position != 1){
-           // view.setBackgroundColor(Color.BLUE);
-        }
 
         return view;
     }

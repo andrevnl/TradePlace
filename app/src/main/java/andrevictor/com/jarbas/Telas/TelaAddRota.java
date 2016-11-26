@@ -20,13 +20,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import andrevictor.com.jarbas.R;
-
-import static andrevictor.com.jarbas.Telas.TelaPrincipal.arrayAdapter;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.locais;
 
 public class TelaAddRota extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private ArrayAdapter arrayAdapter;
 
     FloatingActionButton btnAddRota;
     EditText localizacaoAtual;
@@ -68,13 +67,9 @@ public class TelaAddRota extends AppCompatActivity implements NavigationView.OnN
         btnAddRota.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Pensar nessa logica (Acho que essa vai dar trabalho)
                 Snackbar.make(view, "Adicionar rota", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                //Intent intent = new Intent(getApplicationContext(), Mtivity.class);
-                // Bundle bundle = new Bundle();
-                // bundle.putInt("posicao",position);
-                // intent.putExtras(bundle);
-                //startActivity(intent);
             }
         });
     }
@@ -115,21 +110,7 @@ public class TelaAddRota extends AppCompatActivity implements NavigationView.OnN
         if (id == R.id.nav_principal) {
             finish();
         } else if (id == R.id.nav_rotas) {
-        //Alerta do historico de rotas
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder
-                .setTitle("Historico de rotas")
-                .setMessage("Enviar historico por e-mail?")
-                .setIcon(R.drawable.ic_history_black_24dp)
-                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(TelaAddRota.this, "E-mail enviado",
-                                Toast.LENGTH_SHORT).show();
-                        //Colocar metodo para mandar solicitação para o back mandar o e-mail
-                    }
-                })
-                .setNegativeButton("Não", null)
-                .show();
+            HistoricoDeRotas();
     } else if (id == R.id.nav_perfil) {
         //Vai pro perfil
         Intent intent = new Intent(getApplicationContext(), TelaPerfil.class);
@@ -147,5 +128,23 @@ public class TelaAddRota extends AppCompatActivity implements NavigationView.OnN
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void HistoricoDeRotas(){
+        //Alerta do historico de rotas
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle("Historico de rotas")
+                .setMessage("Enviar historico por e-mail?")
+                .setIcon(R.drawable.ic_history_black_24dp)
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(TelaAddRota.this, "E-mail enviado",
+                                Toast.LENGTH_SHORT).show();
+                        //Colocar metodo para mandar solicitação para o back mandar o e-mail
+                    }
+                })
+                .setNegativeButton("Não", null)
+                .show();
     }
 }
