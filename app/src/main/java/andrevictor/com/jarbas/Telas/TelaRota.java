@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ import andrevictor.com.jarbas.ClassesDiversas.ItemListView;
 import andrevictor.com.jarbas.R;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.adapterListView;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.itens;
+import static andrevictor.com.jarbas.Telas.TelaPrincipal.letrasAtivas;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.letrasVisitadas;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.linhaAtiva;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.listaPrincipal;
@@ -85,7 +87,19 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
             @Override
             public void onClick(View view) {
                 if(linhaAtiva == PosicaoList) {
+                    //Troca o icone,cor do texto e cor da linha ativa
                     itens.get(linhaAtiva).setIconeRid(letrasVisitadas.get(linhaAtiva));
+                    itens.get(linhaAtiva).setColor("#EBEBEB");
+                    itens.get(linhaAtiva).setCorLinha("#A4A4A4");
+                    //Troca o icone, cor do texto e cor da linha da proxima
+                    try{
+                        itens.get(linhaAtiva + 1).setIconeRid(letrasAtivas.get(linhaAtiva + 1));
+                        itens.get(linhaAtiva + 1).setColor("#26A79B");
+                        itens.get(linhaAtiva + 1).setCorLinha("#FFFFFF");
+                    }catch (IndexOutOfBoundsException e){
+
+                    }
+                    /////////////////////////////////////////////////////////
                     listaPrincipal.setAdapter(adapterListView);
                     linhaAtiva++;
                     finish();
@@ -138,7 +152,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
 
 
         for ( contador = 0; contador < lugares.size(); contador++){
-            ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_mm);
+            ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
             itensRota.add(item);
         }
 
@@ -229,13 +243,14 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         protected Direcoes doInBackground(Void... params) {
             Utils util = new Utils();
             //return util.getInformacao("https://maps.googleapis.com/maps/api/directions/json?origin=-23.545991,%20-46.913044&destination=-23.536249,%20-46.646157&mode=transit&key=AIzaSyDe7az8c6z4jO2MQzuJLoG1gq2WpHATomc");
-            return util.getInformacao("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&mode=transit&language=pt-br&key=AIzaSyDe7az8c6z4jO2MQzuJLoG1gq2WpHATomc");
+            //return util.getInformacao("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&mode=transit&language=pt-br&key=AIzaSyDe7az8c6z4jO2MQzuJLoG1gq2WpHATomc");
+            return util.getInformacao("http://192.168.0.1:8080/TradeForce/tarefa");
         }
 
         @Override
         protected void onPostExecute(Direcoes direcoes){
 
-            //lugares.add(direcoes.getPreco());
+
             createListView();
 
             drawRoute();

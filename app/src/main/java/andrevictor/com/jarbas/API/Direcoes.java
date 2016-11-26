@@ -10,68 +10,124 @@ import java.util.List;
 
 public class Direcoes{
 
-    private String nomeLocal;
-    private ArrayList<String> directionsMap;
-    private String preco;
-    private String StartLatitude;
-    private String StartLongitude;
-    private String EndLatitude;
-    private String EndLogintude;
+    //Dados do Promotor
+    private String nomePromotor;
+    private String LoginPromotor;
+    private String SenhaPromotor;
+    private String EmpresaPromotor;
+    private String LatitudePromotor;
+    private String LongitudePromotor;
+    //Dados do Mercado
+    private String NomeMercado;
+    private String LatitudeMercado;
+    private String LongitudeMercado;
+    //Dados da Rota
+    private String PrecoRota;
+    private String SequenciaRota;
+    private ArrayList<String> InstrucoesRota;
+    private ArrayList<String> PolylinesRota ;
 
-
-    public String getNomeLocal() {
-        return nomeLocal;
+    public String getNomePromotor() {
+        return nomePromotor;
     }
 
-    public void setNomeLocal(String nomeLocal) {
-        this.nomeLocal = nomeLocal;
+    public void setNomePromotor(String nomePromotor) {
+        this.nomePromotor = nomePromotor;
     }
 
-    public String getPreco() {
-        return preco;
+    public String getLoginPromotor() {
+        return LoginPromotor;
     }
 
-    public void setPreco(String preco) {
-        this.preco = preco;
+    public void setLoginPromotor(String loginPromotor) {
+        LoginPromotor = loginPromotor;
     }
 
-    public ArrayList<String> getDirectionsMap() {
-        return directionsMap;
+    public String getSenhaPromotor() {
+        return SenhaPromotor;
     }
 
-    public void setDirectionsMap(ArrayList<String> directionsMap) {
-        this.directionsMap = directionsMap;
+    public void setSenhaPromotor(String senhaPromotor) {
+        SenhaPromotor = senhaPromotor;
     }
 
-    public String getStartLatitude() {
-        return StartLatitude;
+    public String getEmpresaPromotor() {
+        return EmpresaPromotor;
     }
 
-    public void setStartLatitude(String startLatitude) {
-        StartLatitude = startLatitude;
+    public void setEmpresaPromotor(String empresaPromotor) {
+        EmpresaPromotor = empresaPromotor;
     }
 
-    public String getStartLongitude() {
-        return StartLongitude;
+    public String getLatitudePromotor() {
+        return LatitudePromotor;
     }
 
-    public void setStartLongitude(String startLongitude) {
-        StartLongitude = startLongitude;
+    public void setLatitudePromotor(String latitudePromotor) {
+        LatitudePromotor = latitudePromotor;
     }
 
-    public String getEndLatitude() {
-        return EndLatitude;
+    public String getLongitudePromotor() {
+        return LongitudePromotor;
     }
 
-    public void setEndLatitude(String endLatitude) {
-        EndLatitude = endLatitude;
+    public void setLongitudePromotor(String longitudePromotor) {
+        LongitudePromotor = longitudePromotor;
     }
 
-    public String getEndLogintude() {
-        return EndLogintude;
+    public String getNomeMercado() {
+        return NomeMercado;
     }
 
-    public void setEndLogintude(String endLogintude) {
-        EndLogintude = endLogintude;
+    public void setNomeMercado(String nomeMercado) {
+        NomeMercado = nomeMercado;
+    }
+
+    public String getLatitudeMercado() {
+        return LatitudeMercado;
+    }
+
+    public void setLatitudeMercado(String latitudeMercado) {
+        LatitudeMercado = latitudeMercado;
+    }
+
+    public String getLongitudeMercado() {
+        return LongitudeMercado;
+    }
+
+    public void setLongitudeMercado(String longitudeMercado) {
+        LongitudeMercado = longitudeMercado;
+    }
+
+    public String getPrecoRota() {
+        return PrecoRota;
+    }
+
+    public void setPrecoRota(String precoRota) {
+        PrecoRota = precoRota;
+    }
+
+    public String getSequenciaRota() {
+        return SequenciaRota;
+    }
+
+    public void setSequenciaRota(String sequenciaRota) {
+        SequenciaRota = sequenciaRota;
+    }
+
+    public ArrayList<String> getInstrucoesRota() {
+        return InstrucoesRota;
+    }
+
+    public void setInstrucoesRota(ArrayList<String> instrucoesRota) {
+        InstrucoesRota = instrucoesRota;
+    }
+
+    public ArrayList<String> getPolylinesRota() {
+        return PolylinesRota;
+    }
+
+    public void setPolylinesRota(ArrayList<String> polylinesRota) {
+        PolylinesRota = polylinesRota;
     }
 }

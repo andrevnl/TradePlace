@@ -1,6 +1,7 @@
 package andrevictor.com.jarbas.ClassesDiversas;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,11 @@ public class AdapterListView extends BaseAdapter
         //atravez do layout pego pelo LayoutInflater, pegamos cada id relacionado
         //ao item e definimos as informações.
         ((TextView) view.findViewById(R.id.text)).setText(item.getTexto());
+        ((TextView) view.findViewById(R.id.text)).setTextColor(Color.parseColor(item.getCorLinha()));
+        view.setBackgroundColor(Color.parseColor(item.getColor()));
         ((ImageView) view.findViewById(R.id.imagemview)).setImageResource(item.getIconeRid());
+
+
 
         return view;
     }

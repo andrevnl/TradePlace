@@ -41,7 +41,7 @@ public class TelaPrincipal extends AppCompatActivity
     public static ArrayList<String> locais;
     public static AdapterListView adapterListView;
     private ArrayList<Integer> letrasDesativadas;
-    private ArrayList<Integer> letrasAtivas;
+    public static ArrayList<Integer> letrasAtivas;
     public static ArrayList<Integer> letrasVisitadas;
     public static ArrayList<ItemListView> itens;
     private ItemListView item;
@@ -126,6 +126,25 @@ public class TelaPrincipal extends AppCompatActivity
         letrasDesativadas.add(R.drawable.ic_f_desativado);
         letrasDesativadas.add(R.drawable.ic_g_desativado);
         letrasDesativadas.add(R.drawable.ic_h_desativado);
+        letrasDesativadas.add(R.drawable.ic_i_desativado);
+        letrasDesativadas.add(R.drawable.ic_j_desativado);
+        letrasDesativadas.add(R.drawable.ic_k_desativado);
+        letrasDesativadas.add(R.drawable.ic_l_desativado);
+        letrasDesativadas.add(R.drawable.ic_m_desativado);
+        letrasDesativadas.add(R.drawable.ic_n_desativado);
+        letrasDesativadas.add(R.drawable.ic_o_desativado);
+        letrasDesativadas.add(R.drawable.ic_p_desativado);
+        letrasDesativadas.add(R.drawable.ic_q_desativado);
+        letrasDesativadas.add(R.drawable.ic_r_desativado);
+        letrasDesativadas.add(R.drawable.ic_s_desativado);
+        letrasDesativadas.add(R.drawable.ic_t_desativado);
+        letrasDesativadas.add(R.drawable.ic_u_desativado);
+        letrasDesativadas.add(R.drawable.ic_v_desativado);
+        letrasDesativadas.add(R.drawable.ic_w_desativado);
+        letrasDesativadas.add(R.drawable.ic_x_desativado);
+        letrasDesativadas.add(R.drawable.ic_y_desativado);
+        letrasDesativadas.add(R.drawable.ic_z_desativado);
+
         letrasAtivas = new ArrayList<>();
         letrasAtivas.add(R.drawable.ic_a_ativo);
         letrasAtivas.add(R.drawable.ic_b_ativo);
@@ -135,6 +154,24 @@ public class TelaPrincipal extends AppCompatActivity
         letrasAtivas.add(R.drawable.ic_f_ativo);
         letrasAtivas.add(R.drawable.ic_g_ativo);
         letrasAtivas.add(R.drawable.ic_h_ativo);
+        letrasAtivas.add(R.drawable.ic_i_ativo);
+        letrasAtivas.add(R.drawable.ic_j_ativo);
+        letrasAtivas.add(R.drawable.ic_k_ativo);
+        letrasAtivas.add(R.drawable.ic_l_ativo);
+        letrasAtivas.add(R.drawable.ic_m_ativo);
+        letrasAtivas.add(R.drawable.ic_n_ativo);
+        letrasAtivas.add(R.drawable.ic_o_ativo);
+        letrasAtivas.add(R.drawable.ic_p_ativo);
+        letrasAtivas.add(R.drawable.ic_q_ativo);
+        letrasAtivas.add(R.drawable.ic_r_ativo);
+        letrasAtivas.add(R.drawable.ic_s_ativo);
+        letrasAtivas.add(R.drawable.ic_t_ativo);
+        letrasAtivas.add(R.drawable.ic_u_ativo);
+        letrasAtivas.add(R.drawable.ic_v_ativo);
+        letrasAtivas.add(R.drawable.ic_w_ativo);
+        letrasAtivas.add(R.drawable.ic_x_ativo);
+        letrasAtivas.add(R.drawable.ic_y_ativo);
+        letrasAtivas.add(R.drawable.ic_z_ativo);
         letrasVisitadas = new ArrayList<>();
         letrasVisitadas.add(R.drawable.ic_a_visitado);
         letrasVisitadas.add(R.drawable.ic_b_visitado);
@@ -144,6 +181,25 @@ public class TelaPrincipal extends AppCompatActivity
         letrasVisitadas.add(R.drawable.ic_f_visitado);
         letrasVisitadas.add(R.drawable.ic_g_visitado);
         letrasVisitadas.add(R.drawable.ic_h_visitado);
+        letrasVisitadas.add(R.drawable.ic_i_visitado);
+        letrasVisitadas.add(R.drawable.ic_j_visitado);
+        letrasVisitadas.add(R.drawable.ic_k_visitado);
+        letrasVisitadas.add(R.drawable.ic_l_visitado);
+        letrasVisitadas.add(R.drawable.ic_m_visitado);
+        letrasVisitadas.add(R.drawable.ic_n_visitado);
+        letrasVisitadas.add(R.drawable.ic_o_visitado);
+        letrasVisitadas.add(R.drawable.ic_p_visitado);
+        letrasVisitadas.add(R.drawable.ic_q_visitado);
+        letrasVisitadas.add(R.drawable.ic_r_visitado);
+        letrasVisitadas.add(R.drawable.ic_s_visitado);
+        letrasVisitadas.add(R.drawable.ic_t_visitado);
+        letrasVisitadas.add(R.drawable.ic_u_visitado);
+        letrasVisitadas.add(R.drawable.ic_v_visitado);
+        letrasVisitadas.add(R.drawable.ic_w_visitado);
+        letrasVisitadas.add(R.drawable.ic_x_visitado);
+        letrasVisitadas.add(R.drawable.ic_y_visitado);
+        letrasVisitadas.add(R.drawable.ic_z_visitado);
+
         ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -154,15 +210,21 @@ public class TelaPrincipal extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                //parent.setBackgroundColor(Color.BLUE);
+                //view.setBackgroundColor(Color.BLUE);
+
                 if(position == linhaAtiva) {
                     Intent intent = new Intent(getApplicationContext(), TelaRota.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("posicao", position);
                     intent.putExtras(bundle);
                     startActivity(intent);
-
                     itens.get(linhaAtiva).setIconeRid(letrasAtivas.get(linhaAtiva));
                     listaPrincipal.setAdapter(adapterListView);
+                    itens.get(linhaAtiva).setColor("#26A79B");
+                    itens.get(linhaAtiva).setCorLinha("#FFFFFF");
+
+
                 }else if(position < linhaAtiva){
                     Intent intent = new Intent(getApplicationContext(), TelaRota.class);
                     Bundle bundle = new Bundle();
@@ -199,8 +261,6 @@ public class TelaPrincipal extends AppCompatActivity
     private void createListView() {
         //Criamos nossa lista que preenchera o ListView
         itens = new ArrayList<ItemListView>();
-
-
 
         for (contador = 0; contador < locais.size(); contador++){
             item = new ItemListView(locais.get(contador), letrasDesativadas.get(contador));

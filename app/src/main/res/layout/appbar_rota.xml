@@ -28,8 +28,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_check_white_24dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+
         app:backgroundTint="@color/colorGreen" />
+
+    <TextView
+        android:text="VALOR DA VIAGEM: R$5,92"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:background="#29495A"
+        android:textColor="@color/corBranca"
+        android:layout_marginBottom="25dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:textAlignment="center"
+        />
 
 </android.support.design.widget.CoordinatorLayout>

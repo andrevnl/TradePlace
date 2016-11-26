@@ -67,7 +67,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Telas.TelaRotaListViewCompleto"
-            android:label="@string/app_name"
+            android:label="Descrição da rotas"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

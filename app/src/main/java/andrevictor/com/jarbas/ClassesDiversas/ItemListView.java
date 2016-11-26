@@ -8,6 +8,8 @@ package andrevictor.com.jarbas.ClassesDiversas;
 public class ItemListView {
     private String texto;
     private int iconeRid;
+    private String color = "#FAFAFA";
+    private String corLinha = "#000000";
 
     public ItemListView()
     {
@@ -37,5 +39,21 @@ public class ItemListView {
     public void setTexto(String texto)
     {
         this.texto = texto;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getCorLinha() {
+        return corLinha;
+    }
+
+    public void setCorLinha(String corLinha) {
+        this.corLinha = corLinha;
     }
 }

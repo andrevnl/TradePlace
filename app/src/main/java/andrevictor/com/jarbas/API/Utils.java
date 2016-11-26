@@ -19,9 +19,6 @@ import static andrevictor.com.jarbas.Telas.TelaRota.listlatlong;
 
 public class Utils {
 
-    int contG = 0;
-    int contP = 0;
-
     public Direcoes getInformacao(String end){
             String json;
         Direcoes retorno;
@@ -31,10 +28,60 @@ public class Utils {
         return retorno;
     }
 
-    private Direcoes parseJson(String json){
+    private Direcoes parseJson(String json) {
         try {
             Direcoes direcoes = new Direcoes(); //Cria o objeto direcoes
 
+
+            JSONArray jsonapi = new JSONArray(json); //Pega o Json
+            JSONObject rotaCompletaJson = jsonapi.getJSONObject(0);
+            JSONObject rotaPromotor =  rotaCompletaJson.getJSONObject("promotor"); //Pega promotor
+            JSONArray rotaRotas =  rotaCompletaJson.getJSONArray("rotas"); //Pega rotas
+           // JSONObject rotaMercados =  rotaCompletaJson.getJSONObject("mercados"); //Pega Mercados
+
+            //Pega informações promotor
+            direcoes.setNomePromotor(rotaPromotor.getString("nome"));
+
+            //Pega informacoes rotas
+            JSONObject rotaTeste = rotaRotas.getJSONObject(0);
+
+            JSONArray instrucoesRotas = rotaTeste.getJSONArray("instrucoes");
+
+            ArrayList<String> arr = new ArrayList<String>();
+
+
+            for(int i = 0; i < instrucoesRotas.length(); i++){
+                arr.add(instrucoesRotas.getString(i));
+                lugares.add(instrucoesRotas.getString(i));
+            }
+
+            direcoes.setInstrucoesRota(arr);
+
+
+
+            Log.i("instrucoes", ""+ direcoes.getInstrucoesRota());
+
+            //Pega informacoes mercados
+            direcoes.setNomePromotor(rotaPromotor.getString("nome"));
+
+            Log.i("NomePromotor", direcoes.getNomePromotor());
+
+            return direcoes;
+        }catch (JSONException e){
+            e.printStackTrace();
+            return null;
+    }
+    }
+
+
+        //try {
+        //    Direcoes direcoes = new Direcoes(); //Cria o objeto direcoes
+
+
+
+            //JSONObject result = new JSONObject(json)
+
+            /*
             JSONObject result = new JSONObject(json); //Pega o JSON
             JSONArray routes = result.getJSONArray("routes"); //Pega a maior classe para depois pegar o que tem dentro dela
             JSONObject objArray = routes.getJSONObject(0); //Seta o primeiro objeto (So tem um se eu entendi direito)
@@ -44,7 +91,7 @@ public class Utils {
             JSONArray objSteps = objLegs.getJSONArray("steps");//subclasse de "legs" / onde fica os passos /É um array
 
             //O que ta aqui em baixo e o que to pegando para usar no programa
-
+/*
             lugares.add(objLegs.getString("start_address")); //Endereco inicial
 
             String s = "0x00000000";
@@ -102,10 +149,11 @@ public class Utils {
             direcoes.setStartLatitude(objSteps.getJSONObject(0).getJSONObject("end_location").getString("lat"));
             direcoes.setStartLatitude(objSteps.getJSONObject(0).getJSONObject("end_location").getString("lng"));
 
+
             return direcoes;
-        }catch (JSONException e){
-            e.printStackTrace();
-            return null;
+        //}catch (JSONException e){
+        //    e.printStackTrace();
+        //    return null;
         }
 
        }
@@ -143,5 +191,6 @@ public class Utils {
         }
         return listPoints;
     }
+     */
 
 }
