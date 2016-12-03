@@ -15,12 +15,12 @@ public class Direcoes{
     private String LoginPromotor;
     private String SenhaPromotor;
     private String EmpresaPromotor;
-    private String LatitudePromotor;
-    private String LongitudePromotor;
+    private Double latitudePromotor;
+    private Double longitudePromotor;
     //Dados do Mercado
     private String NomeMercado;
-    private String LatitudeMercado;
-    private String LongitudeMercado;
+    private Double latitudeMercado;
+    private Double longitudeMercado;
     //Dados da Rota
     private String PrecoRota;
     private String SequenciaRota;
@@ -55,58 +55,6 @@ public class Direcoes{
         return EmpresaPromotor;
     }
 
-    public void setEmpresaPromotor(String empresaPromotor) {
-        EmpresaPromotor = empresaPromotor;
-    }
-
-    public String getLatitudePromotor() {
-        return LatitudePromotor;
-    }
-
-    public void setLatitudePromotor(String latitudePromotor) {
-        LatitudePromotor = latitudePromotor;
-    }
-
-    public String getLongitudePromotor() {
-        return LongitudePromotor;
-    }
-
-    public void setLongitudePromotor(String longitudePromotor) {
-        LongitudePromotor = longitudePromotor;
-    }
-
-    public String getNomeMercado() {
-        return NomeMercado;
-    }
-
-    public void setNomeMercado(String nomeMercado) {
-        NomeMercado = nomeMercado;
-    }
-
-    public String getLatitudeMercado() {
-        return LatitudeMercado;
-    }
-
-    public void setLatitudeMercado(String latitudeMercado) {
-        LatitudeMercado = latitudeMercado;
-    }
-
-    public String getLongitudeMercado() {
-        return LongitudeMercado;
-    }
-
-    public void setLongitudeMercado(String longitudeMercado) {
-        LongitudeMercado = longitudeMercado;
-    }
-
-    public String getPrecoRota() {
-        return PrecoRota;
-    }
-
-    public void setPrecoRota(String precoRota) {
-        PrecoRota = precoRota;
-    }
-
     public String getSequenciaRota() {
         return SequenciaRota;
     }
@@ -129,5 +77,57 @@ public class Direcoes{
 
     public void setPolylinesRota(ArrayList<String> polylinesRota) {
         PolylinesRota = polylinesRota;
+    }
+
+    public void setEmpresaPromotor(String empresaPromotor) {
+        EmpresaPromotor = empresaPromotor;
+    }
+
+    public Double getLatitudePromotor() {
+        return latitudePromotor;
+    }
+
+    public void setLatitudePromotor(Double latitudePromotor) {
+        this.latitudePromotor = latitudePromotor;
+    }
+
+    public Double getLongitudePromotor() {
+        return longitudePromotor;
+    }
+
+    public void setLongitudePromotor(Double longitudePromotor) {
+        this.longitudePromotor = longitudePromotor;
+    }
+
+    public String getNomeMercado() {
+        return NomeMercado;
+    }
+
+    public void setNomeMercado(String nomeMercado) {
+        NomeMercado = nomeMercado;
+    }
+
+    public Double getLatitudeMercado() {
+        return latitudeMercado;
+    }
+
+    public void setLatitudeMercado(Double latitudeMercado) {
+        this.latitudeMercado = latitudeMercado;
+    }
+
+    public Double getLongitudeMercado() {
+        return longitudeMercado;
+    }
+
+    public void setLongitudeMercado(Double longitudeMercado) {
+        this.longitudeMercado = longitudeMercado;
+    }
+
+    public String getPrecoRota() {
+        return PrecoRota;
+    }
+
+    public void setPrecoRota(String precoRota) {
+        PrecoRota = precoRota;
     }
 }

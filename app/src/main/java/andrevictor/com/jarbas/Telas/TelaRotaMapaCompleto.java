@@ -1,5 +1,6 @@
 package andrevictor.com.jarbas.Telas;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -47,17 +48,15 @@ public class TelaRotaMapaCompleto extends FragmentActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        double a = -23.545991;
-        double b = -46.913044;
-        double c = -23.536249;
-        double d = -46.646157;
+        Intent intent = getIntent();
+
+        Bundle bundle = intent.getExtras();
 
         // Ponto A
-        LatLng pontoA = new LatLng(a,b); //-25.443195, -49.280977);
-        LatLng pontoB = new LatLng(c,d); //-25.442207, -49.278403);
-        LatLng pontoC = new LatLng(-23.522567, -46.753754); //-25.442207, -49.278403);
+        LatLng pontoA = new LatLng(bundle.getDouble("mLat1") , bundle.getDouble("mLng1")); //-25.443195, -49.280977);
+        LatLng pontoB = new LatLng(bundle.getDouble("mLat2"),bundle.getDouble("mLng2")); //-25.442207, -49.278403);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoC,10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoA,13));
 
         mMap.addMarker(new MarkerOptions().title("teste").snippet("teste1").position(pontoA));
         mMap.addMarker(new MarkerOptions().title("teste").snippet("teste1").position(pontoB));
@@ -77,7 +76,7 @@ public class TelaRotaMapaCompleto extends FragmentActivity implements OnMapReady
                 Log.i("listlatlongCompleto",""+listlatlong.get(1));
             }
 
-            po.color(Color.BLACK).width(4);
+            po.color(Color.rgb(36,166,154)).width(8);
             polyline = mMap.addPolyline(po);
         } else {
             polyline.setPoints(listlatlong);

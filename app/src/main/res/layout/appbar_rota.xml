@@ -35,6 +35,7 @@
         app:backgroundTint="@color/colorGreen" />
 
     <TextView
+        android:id="@+id/textPreco"
         android:text="VALOR DA VIAGEM: R$5,92"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

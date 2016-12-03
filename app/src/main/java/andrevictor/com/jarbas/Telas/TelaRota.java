@@ -20,12 +20,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.drive.query.internal.LogicalFilter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -62,6 +66,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
     private ProgressDialog load;
     ListView listaRota;
     FloatingActionButton btnFinalizarRota;
+    TextView textPreco;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,10 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        textPreco = (TextView) findViewById(R.id.textPreco);
+
+        textPreco.setText("VALOR DA VIAGEM: R$0,00");
 
 
         //Botao flutuante - Finalizar rota
@@ -142,6 +151,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
 
         //Chama Async Task
         download.execute();
+
     }
 
     private void createListView() {
@@ -243,26 +253,62 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         protected Direcoes doInBackground(Void... params) {
             Utils util = new Utils();
             //return util.getInformacao("https://maps.googleapis.com/maps/api/directions/json?origin=-23.545991,%20-46.913044&destination=-23.536249,%20-46.646157&mode=transit&key=AIzaSyDe7az8c6z4jO2MQzuJLoG1gq2WpHATomc");
-            //return util.getInformacao("https://maps.googleapis.com/maps/api/directions/json?origin="+origem+"&destination="+destino+"&mode=transit&language=pt-br&key=AIzaSyDe7az8c6z4jO2MQzuJLoG1gq2WpHATomc");
             return util.getInformacao("http://192.168.0.1:8080/TradeForce/tarefa");
         }
 
         @Override
-        protected void onPostExecute(Direcoes direcoes){
-
+        protected void onPostExecute(final Direcoes direcoes){
 
             createListView();
+
+            textPreco.setText("VALOR DA VIAGEM: R$" + direcoes.getPrecoRota());
+
+            //Marcador
+            LatLng pontoA = new LatLng(direcoes.getLatitudePromotor(),direcoes.getLongitudePromotor());
+            mMap.addMarker(new MarkerOptions().title("Casa").snippet("Promotor").position(pontoA));
+
+            LatLng pontoB = new LatLng(direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
+            mMap.addMarker(new MarkerOptions().title("Mercado").snippet("Extra").position(pontoB));
+
+           // LatLng pontoMeio = new LatLng(direcoes.getLatitudePromotor()+(direcoes.getLatitudePromotor()-direcoes.getLatitudeMercado())/2,direcoes.getLongitudePromotor()+(direcoes.getLongitudePromotor()-direcoes.getLongitudeMercado())/2);
+
+            LatLng pontoMeio = new LatLng((direcoes.getLatitudePromotor()+direcoes.getLatitudeMercado())/2,(direcoes.getLongitudePromotor()+direcoes.getLongitudeMercado())+2);
+
+            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoA,13));
+
+            LatLngBounds bounds = new LatLngBounds.Builder()
+                    .include(pontoA)
+                    .include(pontoB)
+                    .build();
+
+
+            LatLng destinationLatLng  = new LatLng(pontoA.latitude, pontoA.longitude);
+            LatLng pickupLatLng = new LatLng(pontoB.latitude, pontoB.longitude);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
 
             drawRoute();
             load.dismiss();
 
+
+
+
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("mLat1", direcoes.getLatitudePromotor());
+                    bundle.putDouble("mLng1", direcoes.getLongitudePromotor());
+                    bundle.putDouble("mLat2", direcoes.getLatitudeMercado());
+                    bundle.putDouble("mLng2", direcoes.getLongitudeMercado());
                     Intent intent = new Intent(getApplicationContext(), TelaRotaMapaCompleto.class);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
+
+
+
+
         }
     }
 
@@ -276,7 +322,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
                 po.add(listlatlong.get(i));
             }
 
-            po.color(Color.BLACK).width(4);
+            po.color(Color.rgb(36,166,154)).width(8);
             polyline = mMap.addPolyline(po);
         } else {
             polyline.setPoints(listlatlong);
@@ -298,33 +344,8 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         String url = "http://maps.google.com/maps?f=d&saddr="+origem+"&daddr="+destino+"&hl=pt";
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         */
-
-        double a = -23.545991;
-        double b = -46.913044;
-        double c = -23.536249;
-        double d = -46.646157;
-
-
-        // Ponto A
-        LatLng pontoA = new LatLng(a,b); //-25.443195, -49.280977);
-        LatLng pontoB = new LatLng(c,d); //-25.442207, -49.278403);
-        LatLng pontoC = new LatLng(-23.522567, -46.753754); //-25.442207, -49.278403);
-
-
-        //mMap.addMarker(new MarkerOptions().position(pontoA).title("Ponto A"));
-
-        //Dar zoom no mapa
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoC,10));
-
         listlatlong = new ArrayList<LatLng>();
 
-        // listlatlong.add(pontoA);
-        // listlatlong.add(pontoB);
-
-        mMap.addMarker(new MarkerOptions().title("teste").snippet("teste1").position(pontoA));
-        mMap.addMarker(new MarkerOptions().title("teste").snippet("teste1").position(pontoB));
-
-        //adicionaPolyline(mMap,pontoA,pontoB);
     }
 
 
