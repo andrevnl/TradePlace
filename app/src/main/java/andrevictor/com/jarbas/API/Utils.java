@@ -1,24 +1,25 @@
 package andrevictor.com.jarbas.API;
 
 import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static andrevictor.com.jarbas.Telas.TelaRota.lugares;
-import static andrevictor.com.jarbas.Telas.TelaRota.listlatlong;
 
-
-//Classe que pega o json e o objeto e atribui um ao outro (Não explicou nada, mas ta valendo)
+//Classe que pega o json e o objeto e atribui um ao outro
 
 public class Utils {
+
+    public static ArrayList<Double> LatitudeMercado;
+    public static ArrayList<Double> LongitudeMercado;
+    public static ArrayList<String> EnderecoMercado;
+    public static ArrayList<String> lugares; //Instrucoes das rotas para chegar no mercado
+    public static ArrayList<String> locais; //Nomes dos supermercados
+    public static ArrayList<LatLng> listlatlong; //Lista com latitude e longitude para desenhar o mapa
 
     public Direcoes getInformacao(String end){
             String json;
@@ -33,32 +34,46 @@ public class Utils {
         try {
             Direcoes direcoes = new Direcoes(); //Cria o objeto direcoes
 
+            LatitudeMercado = new ArrayList<>();
+            LongitudeMercado = new ArrayList<>();
+            EnderecoMercado = new ArrayList<>();
+            lugares = new ArrayList<>();
+            listlatlong = new ArrayList<>();
+            locais = new ArrayList<>();
+
 
             JSONArray jsonapi = new JSONArray(json); //Pega o Json
             JSONObject rotaCompletaJson = jsonapi.getJSONObject(0); //Pega o objeto 0
 
-            //Promotor
+            //Promotor //Peguei tudo o que precisa do promotor
             JSONObject rotaPromotor = rotaCompletaJson.getJSONObject("promotor");
-            direcoes.setNomePromotor(rotaPromotor.getString("nome")); //Manda o nome da api para o objeto
+            direcoes.setNomePromotor(rotaPromotor.getString("nome")); //Pega o nome
             JSONObject rotaLocalizacao = rotaPromotor.getJSONObject("localizacao");
-            direcoes.setLatitudePromotor(rotaLocalizacao.getDouble("latitude"));
-            direcoes.setLongitudePromotor(rotaLocalizacao.getDouble("longitude"));
-            direcoes.setNomePromotor(rotaPromotor.getString("nome"));
+            direcoes.setLatitudePromotor(rotaLocalizacao.getDouble("latitude")); //Pega latitude casa promotor
+            direcoes.setLongitudePromotor(rotaLocalizacao.getDouble("longitude")); //Pega longitude casa promotor
+            JSONObject rotaEmpresaPromotor = rotaPromotor.getJSONObject("empresa");
+            direcoes.setEmpresaPromotor(rotaEmpresaPromotor.getString("nome"));
 
 
-            //Mercado
+            //Mercado //Peguei tudo de todos os mercados para usar no programa na primeira vez que roda
             JSONArray rotaMercados = rotaCompletaJson.getJSONArray("mercados");
-            JSONObject rotaMercado = rotaMercados.getJSONObject(0);
-            JSONObject rotaMercadoLocalizacao = rotaMercado.getJSONObject("localizacao");
-            direcoes.setLatitudeMercado(rotaMercadoLocalizacao.getDouble("latitude"));
-            direcoes.setLongitudeMercado(rotaMercadoLocalizacao.getDouble("longitude"));
+
+            for(int i = 0; i < rotaMercados.length(); i++){
+                JSONObject rotaMercado = rotaMercados.getJSONObject(i);
+                JSONObject rotaMercadoLocalizacao = rotaMercado.getJSONObject("localizacao");
+                LatitudeMercado.add(rotaMercadoLocalizacao.getDouble("latitude")); //Latitude mercado
+                LongitudeMercado.add(rotaMercadoLocalizacao.getDouble("longitude")); //Longitude mercado
+                locais.add(rotaMercado.getString("nome")); //Nome Mercado
+                EnderecoMercado.add(rotaMercado.getString("endereco")); //Endereco Mercado
+            }
+
 
             //Pega informacoes rotas
             JSONArray rotaRotas =  rotaCompletaJson.getJSONArray("rotas"); //Pega rotas
             JSONObject rotaTeste = rotaRotas.getJSONObject(0);
 
-            direcoes.setPrecoRota(""+rotaTeste.getDouble(new DecimalFormat("0.00").format(3.80)));//rotaTeste.getDouble("preco")));
 
+            direcoes.setPrecoRota(new DecimalFormat("0.00").format(3.80)); //Arrumar essa parte
 
             JSONArray instrucoesRotas = rotaTeste.getJSONArray("instrucoes"); //Instrucoes
             JSONArray polylinesRotas = rotaTeste.getJSONArray("polylines"); //Polylines

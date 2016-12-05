@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import andrevictor.com.jarbas.R;
 
-import static andrevictor.com.jarbas.Telas.TelaRota.lugares;
+import static andrevictor.com.jarbas.API.Utils.lugares;
 
 public class TelaRotaListViewCompleto extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

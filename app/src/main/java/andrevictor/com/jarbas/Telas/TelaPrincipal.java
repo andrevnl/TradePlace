@@ -1,14 +1,14 @@
 package andrevictor.com.jarbas.Telas;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,26 +20,32 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
-import andrevictor.com.jarbas.ClassesDiversas.AdapterListView;
+
+import andrevictor.com.jarbas.API.Direcoes;
+import andrevictor.com.jarbas.API.Utils;
+import andrevictor.com.jarbas.ClassesDiversas.AdapterListViewPrincipal;
 import andrevictor.com.jarbas.ClassesDiversas.ItemListView;
 import andrevictor.com.jarbas.ClassesDiversas.PermissionUtils;
 import andrevictor.com.jarbas.ClassesDiversas.TypefaceUtil;
 import andrevictor.com.jarbas.R;
 
+import static andrevictor.com.jarbas.API.Utils.locais;
+import static andrevictor.com.jarbas.R.string.app_name;
+
 public class TelaPrincipal extends AppCompatActivity
         implements AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
-    //Array que copulam a listview (verificar se vai precisar de todos)
-    public static ArrayList<String> locais;
-    public static AdapterListView adapterListView;
+    public static AdapterListViewPrincipal adapterListView;
     private ArrayList<Integer> letrasDesativadas;
     public static ArrayList<Integer> letrasAtivas;
     public static ArrayList<Integer> letrasVisitadas;
@@ -54,6 +60,9 @@ public class TelaPrincipal extends AppCompatActivity
     public static ListView listaPrincipal;
     SupportMapFragment mapFragment;
     FloatingActionButton btnAddButton;
+    private ProgressDialog load;
+    TextView LateralNome;
+    TextView LateralEmpresa;
 
     //String de permissoes (obvio)
     String[] permissoes = new String[]{
@@ -86,6 +95,8 @@ public class TelaPrincipal extends AppCompatActivity
         //ListView com os locais que precisam ser visitados
         listaPrincipal = (ListView) findViewById(R.id.ListPrincipal);
 
+        LateralNome = (TextView) findViewById(R.id.textMenuLateralNome);
+        LateralEmpresa = (TextView) findViewById(R.id.textMenuLateralEmpresa);
 
 
         //Fragmento do mapa
@@ -105,15 +116,6 @@ public class TelaPrincipal extends AppCompatActivity
         //Fim da parte de criar elementos da tela
         ///////////////////////////////////////////////////////////////////////////////
 
-        //Copula o array e joga na listview
-        ///////////////////////////////////////////////////////////////////////////////
-        locais = new ArrayList<>();
-        locais.add("EXTRA PAULISTA");
-        locais.add("PÃO DE AÇÚCAR ANA ROSA");
-        locais.add("CARREFOUR ANA ROSA");
-        locais.add("EXTRA PAULISTA");
-        locais.add("PÃO DE AÇÚCAR ANA ROSA");
-        locais.add("CARREFOUR ANA ROSA");
         ///////////////////////////////////////////////////////////////////////////////
         //Copula o array e joga as imagens das letras que vao ser usadas na listview para representar ativo, desativado e ja visitado
         ///////////////////////////////////////////////////////////////////////////////
@@ -202,44 +204,6 @@ public class TelaPrincipal extends AppCompatActivity
 
         ////////////////////////////////////////////////////////////////////////////////
 
-
-
-        //OnClick da lista que chama a outra tela e passa as informacoes da rota (verificar se vai ser assim mesmo)
-        ///////////////////////////////////////////////////////////////////////////////
-        listaPrincipal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                //parent.setBackgroundColor(Color.BLUE);
-                //view.setBackgroundColor(Color.BLUE);
-
-                if(position == linhaAtiva) {
-                    Intent intent = new Intent(getApplicationContext(), TelaRota.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("posicao", position);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    itens.get(linhaAtiva).setIconeRid(letrasAtivas.get(linhaAtiva));
-                    listaPrincipal.setAdapter(adapterListView);
-                    itens.get(linhaAtiva).setColor("#26A79B");
-                    itens.get(linhaAtiva).setCorLinha("#FFFFFF");
-
-
-                }else if(position < linhaAtiva){
-                    Intent intent = new Intent(getApplicationContext(), TelaRota.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("posicao", position);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
-
-                else{
-                    AlertDialog.Builder builder = new AlertDialog.Builder(TelaPrincipal.this);
-                    builder.setTitle("Rota inativa").setMessage("Favor finalizar rota anterior para habilitar essa rota!").setIcon(R.drawable.ic_error_outline_black_24dp).show();
-                }
-            }
-        });
-
         ///////////////////////////////////////////////////////////////////////////////
 
         //Comeco da parte que mexe com menu lateral
@@ -255,7 +219,9 @@ public class TelaPrincipal extends AppCompatActivity
         //Fim da parte que mexe com menu lateral
         ///////////////////////////////////////////////////////////////////////////////
 
-        createListView();
+        GetJson download = new GetJson();
+
+        download.execute();
     }
 
     private void createListView() {
@@ -268,7 +234,7 @@ public class TelaPrincipal extends AppCompatActivity
         }
 
         //Cria o adapter
-        adapterListView = new AdapterListView(this, itens);
+        adapterListView = new AdapterListViewPrincipal(this, itens);
 
         //Define o Adapter
         listaPrincipal.setAdapter(adapterListView);
@@ -315,8 +281,8 @@ public class TelaPrincipal extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_sair) {
             //Vai pra tela de login
-            Intent intent = new Intent(getApplicationContext(), TelaLogin.class);
-            startActivity(intent);
+            //Intent intent = new Intent(getApplicationContext(), TelaLogin.class);
+            //startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -376,7 +342,7 @@ public class TelaPrincipal extends AppCompatActivity
     private void alertAndFinish(){
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.app_name).setMessage("Para utilizar este aplicativo, voce precisa aceitar as permissoes.");
+            builder.setTitle(app_name).setMessage("Para utilizar este aplicativo, voce precisa aceitar as permissoes.");
             //Adiciona os botoes
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
@@ -411,6 +377,65 @@ public class TelaPrincipal extends AppCompatActivity
                 })
                 .setNegativeButton("Não", null)
                 .show();
+    }
+
+    private class GetJson extends AsyncTask<Void, Void, Direcoes> {
+
+        @Override
+        protected void onPreExecute(){
+            load = ProgressDialog.show(TelaPrincipal.this, "Por favor Aguarde ...", "Recuperando Informações do Servidor...");
+        }
+
+        @Override
+        protected Direcoes doInBackground(Void... params) {
+            Utils util = new Utils();
+            return util.getInformacao("http://192.168.0.100:8080/TradeForce/tarefa");
+        }
+
+        @Override
+        protected void onPostExecute(final Direcoes direcoes){
+            load.dismiss();
+
+            createListView(); //Copula a list com o nome dos mercados
+
+       //     LateralNome.setText("AAAA");//direcoes.getNomePromotor()); //Muda nome no menu lateral para o nome do promotor
+       //     LateralEmpresa.setText("BBB");//direcoes.getEmpresaPromotor()); //Muda empresa no menu lateral para a do promotor
+
+            //OnClick da lista que chama a outra tela e passa as informacoes da rota (verificar se vai ser assim mesmo)
+            ///////////////////////////////////////////////////////////////////////////////
+            listaPrincipal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    if(position == linhaAtiva) {
+                        Intent intent = new Intent(getApplicationContext(), TelaRota.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("posicao", position);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        itens.get(linhaAtiva).setIconeRid(letrasAtivas.get(linhaAtiva));
+                        listaPrincipal.setAdapter(adapterListView);
+                        itens.get(linhaAtiva).setColor("#26A79B");
+                        itens.get(linhaAtiva).setCorLinha("#FFFFFF");
+
+
+                    }else if(position < linhaAtiva){
+                        Intent intent = new Intent(getApplicationContext(), TelaRota.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("posicao", position);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+
+                    else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(TelaPrincipal.this);
+                        builder.setTitle("Rota inativa").setMessage("Favor finalizar rota anterior para habilitar essa rota!").setIcon(R.drawable.ic_error_outline_black_24dp).show();
+                    }
+                }
+            });
+
+
+        }
     }
 
 }

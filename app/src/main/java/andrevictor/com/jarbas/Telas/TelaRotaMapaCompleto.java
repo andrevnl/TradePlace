@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import andrevictor.com.jarbas.R;
 
-import static andrevictor.com.jarbas.Telas.TelaRota.listlatlong;
+import static andrevictor.com.jarbas.API.Utils.listlatlong;
 
 public class TelaRotaMapaCompleto extends FragmentActivity implements OnMapReadyCallback {
 

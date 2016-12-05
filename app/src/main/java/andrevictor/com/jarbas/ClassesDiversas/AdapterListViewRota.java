@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 
 import andrevictor.com.jarbas.R;
@@ -17,12 +18,12 @@ import andrevictor.com.jarbas.R;
  * Classe que permite colocar a imageview e o textview na mesma linha do listview
  */
 
-public class AdapterListView extends BaseAdapter
+public class AdapterListViewRota extends BaseAdapter
 {
     private LayoutInflater mInflater;
     private ArrayList<ItemListView> itens;
 
-    public AdapterListView(Context context, ArrayList<ItemListView> itens)
+    public AdapterListViewRota(Context context, ArrayList<ItemListView> itens)
     {
         //Itens que preencheram o listview
         this.itens = itens;
@@ -68,7 +69,7 @@ public class AdapterListView extends BaseAdapter
         //Pega o item de acordo com a posição.
         ItemListView item = itens.get(position);
         //infla o layout para podermos preencher os dados
-        view = mInflater.inflate(R.layout.item_list, null);
+        view = mInflater.inflate(R.layout.item_listrota, null);
 
         //atravez do layout pego pelo LayoutInflater, pegamos cada id relacionado
         //ao item e definimos as informações.

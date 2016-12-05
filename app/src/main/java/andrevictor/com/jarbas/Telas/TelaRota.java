@@ -1,10 +1,8 @@
 package andrevictor.com.jarbas.Telas;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AlertDialog;
@@ -14,7 +12,6 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +20,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.drive.query.internal.LogicalFilter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -36,9 +32,17 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import andrevictor.com.jarbas.API.Direcoes;
 import andrevictor.com.jarbas.API.Utils;
-import andrevictor.com.jarbas.ClassesDiversas.AdapterListView;
+import andrevictor.com.jarbas.ClassesDiversas.AdapterListViewPrincipal;
+import andrevictor.com.jarbas.ClassesDiversas.AdapterListViewRota;
 import andrevictor.com.jarbas.ClassesDiversas.ItemListView;
 import andrevictor.com.jarbas.R;
+
+import static andrevictor.com.jarbas.API.Utils.EnderecoMercado;
+import static andrevictor.com.jarbas.API.Utils.LatitudeMercado;
+import static andrevictor.com.jarbas.API.Utils.LongitudeMercado;
+import static andrevictor.com.jarbas.API.Utils.listlatlong;
+import static andrevictor.com.jarbas.API.Utils.locais;
+import static andrevictor.com.jarbas.API.Utils.lugares;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.adapterListView;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.itens;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.letrasAtivas;
@@ -49,11 +53,10 @@ import static andrevictor.com.jarbas.Telas.TelaPrincipal.listaPrincipal;
 public class TelaRota extends AppCompatActivity implements AdapterView.OnItemClickListener,OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener {
 
     //Array que copulam a listview
-    public static ArrayList<String> lugares;
+
     private Polyline polyline;
-    private AdapterListView adapterListViewRota;
+    private AdapterListViewRota adapterListViewRota;
     private ArrayList<ItemListView> itensRota;
-    public static ArrayList<LatLng> listlatlong;
 
     //-23.546161, -46.913081 Casa
     //-23.536544, -46.646308 Senai
@@ -63,7 +66,6 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
 
     //Componentes
     private GoogleMap mMap;
-    private ProgressDialog load;
     ListView listaRota;
     FloatingActionButton btnFinalizarRota;
     TextView textPreco;
@@ -118,7 +120,6 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
             }
         });
 
-
         //Comeco da parte que mexe com menu lateral
         //////////////////////////////////////////////////////////////////////////////
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -132,7 +133,6 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         //Fim da parte que mexe com menu lateral
         //////////////////////////////////////////////////////////////////////////////
 
-        GetJson download = new GetJson();
 
         listaRota = (ListView) findViewById(R.id.ListPrincipal);
 
@@ -145,12 +145,9 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         });
         //Isso aqui vai ser preenchido dentro de um for pelo json
 
-        lugares = new ArrayList<>();
-
         createListView();
 
-        //Chama Async Task
-        download.execute();
+
 
     }
 
@@ -167,7 +164,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         }
 
         //Cria o adapter
-        adapterListViewRota = new AdapterListView(this, itensRota);
+        adapterListViewRota = new AdapterListViewRota(this, itensRota);
 
         //Define o Adapter
         listaRota.setAdapter(adapterListViewRota);
@@ -225,8 +222,8 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
             finish();
         } else if (id == R.id.nav_sair) {
             //Vai pra tela de login
-            Intent intent = new Intent(getApplicationContext(), TelaLogin.class);
-            startActivity(intent);
+            //Intent intent = new Intent(getApplicationContext(), TelaLogin.class);
+            //startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -239,77 +236,6 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-    }
-
-
-    private class GetJson extends AsyncTask<Void, Void, Direcoes> {
-
-        @Override
-        protected void onPreExecute(){
-            load = ProgressDialog.show(TelaRota.this, "Por favor Aguarde ...", "Recuperando Informações do Servidor...");
-        }
-
-        @Override
-        protected Direcoes doInBackground(Void... params) {
-            Utils util = new Utils();
-            //return util.getInformacao("https://maps.googleapis.com/maps/api/directions/json?origin=-23.545991,%20-46.913044&destination=-23.536249,%20-46.646157&mode=transit&key=AIzaSyDe7az8c6z4jO2MQzuJLoG1gq2WpHATomc");
-            return util.getInformacao("http://192.168.0.1:8080/TradeForce/tarefa");
-        }
-
-        @Override
-        protected void onPostExecute(final Direcoes direcoes){
-
-            createListView();
-
-            textPreco.setText("VALOR DA VIAGEM: R$" + direcoes.getPrecoRota());
-
-            //Marcador
-            LatLng pontoA = new LatLng(direcoes.getLatitudePromotor(),direcoes.getLongitudePromotor());
-            mMap.addMarker(new MarkerOptions().title("Casa").snippet("Promotor").position(pontoA));
-
-            LatLng pontoB = new LatLng(direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
-            mMap.addMarker(new MarkerOptions().title("Mercado").snippet("Extra").position(pontoB));
-
-           // LatLng pontoMeio = new LatLng(direcoes.getLatitudePromotor()+(direcoes.getLatitudePromotor()-direcoes.getLatitudeMercado())/2,direcoes.getLongitudePromotor()+(direcoes.getLongitudePromotor()-direcoes.getLongitudeMercado())/2);
-
-            LatLng pontoMeio = new LatLng((direcoes.getLatitudePromotor()+direcoes.getLatitudeMercado())/2,(direcoes.getLongitudePromotor()+direcoes.getLongitudeMercado())+2);
-
-            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoA,13));
-
-            LatLngBounds bounds = new LatLngBounds.Builder()
-                    .include(pontoA)
-                    .include(pontoB)
-                    .build();
-
-
-            LatLng destinationLatLng  = new LatLng(pontoA.latitude, pontoA.longitude);
-            LatLng pickupLatLng = new LatLng(pontoB.latitude, pontoB.longitude);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
-
-            drawRoute();
-            load.dismiss();
-
-
-
-
-            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng latLng) {
-                    Bundle bundle = new Bundle();
-                    bundle.putDouble("mLat1", direcoes.getLatitudePromotor());
-                    bundle.putDouble("mLng1", direcoes.getLongitudePromotor());
-                    bundle.putDouble("mLat2", direcoes.getLatitudeMercado());
-                    bundle.putDouble("mLng2", direcoes.getLongitudeMercado());
-                    Intent intent = new Intent(getApplicationContext(), TelaRotaMapaCompleto.class);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
-            });
-
-
-
-
-        }
     }
 
     //Metodo para desenhar no mapa
@@ -336,16 +262,38 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         //mMap.setMyLocationEnabled(true); //Essa e a linha caso precise usar a localizacao
         mMap.setTrafficEnabled(false); //Tira os botoes de baixo no mapa
 
-        //Descobrir a rota (exemplo do livro)
-        //Esse exemplo abre o google maps para mostrar as rotas e direcoes, bem legal mas nao serve pra gente
-        /*
-        String origem = "-25.443195, -49.280977";
-        String destino = "-25.442207, -49.278403";
-        String url = "http://maps.google.com/maps?f=d&saddr="+origem+"&daddr="+destino+"&hl=pt";
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-        */
-        listlatlong = new ArrayList<LatLng>();
+        //Marcador
+        LatLng pontoA = new LatLng(LatitudeMercado.get(linhaAtiva), LongitudeMercado.get(linhaAtiva)); //direcoes.getLatitudePromotor(),direcoes.getLongitudePromotor());
+        mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoA));
+        
+        LatLng pontoB = new LatLng(LatitudeMercado.get(linhaAtiva+1), LongitudeMercado.get(linhaAtiva+1)); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
+        mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva+1)).snippet(EnderecoMercado.get(linhaAtiva+1)).position(pontoB));
 
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoA,13));
+
+        //        LatLngBounds bounds = new LatLngBounds.Builder()
+        //              .include(pontoA)
+        //            .include(pontoB)
+        //          .build();
+
+
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,50));
+
+        drawRoute();
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Bundle bundle = new Bundle();
+                //  bundle.putDouble("mLat1", direcoes.getLatitudePromotor());
+                //  bundle.putDouble("mLng1", direcoes.getLongitudePromotor());
+                //  bundle.putDouble("mLat2", direcoes.getLatitudeMercado());
+                //  bundle.putDouble("mLng2", direcoes.getLongitudeMercado());
+                Intent intent = new Intent(getApplicationContext(), TelaRotaMapaCompleto.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
 

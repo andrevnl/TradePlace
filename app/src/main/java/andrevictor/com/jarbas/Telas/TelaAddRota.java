@@ -3,7 +3,6 @@ package andrevictor.com.jarbas.Telas;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -21,7 +20,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import andrevictor.com.jarbas.R;
-import static andrevictor.com.jarbas.Telas.TelaPrincipal.locais;
+import static andrevictor.com.jarbas.API.Utils.locais;
 
 public class TelaAddRota extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -103,7 +102,7 @@ public class TelaAddRota extends AppCompatActivity implements NavigationView.OnN
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
