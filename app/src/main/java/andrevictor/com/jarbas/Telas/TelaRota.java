@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
+import java.util.List;
+
 import andrevictor.com.jarbas.API.Direcoes;
 import andrevictor.com.jarbas.API.Utils;
 import andrevictor.com.jarbas.ClassesDiversas.AdapterListViewPrincipal;
@@ -40,9 +43,16 @@ import andrevictor.com.jarbas.R;
 import static andrevictor.com.jarbas.API.Utils.EnderecoMercado;
 import static andrevictor.com.jarbas.API.Utils.LatitudeMercado;
 import static andrevictor.com.jarbas.API.Utils.LongitudeMercado;
+import static andrevictor.com.jarbas.API.Utils.controlaIntrucoesRota;
+import static andrevictor.com.jarbas.API.Utils.controlaPolilynesRota;
+import static andrevictor.com.jarbas.API.Utils.enderecoPromotor;
+import static andrevictor.com.jarbas.API.Utils.latitudePromotor;
 import static andrevictor.com.jarbas.API.Utils.listlatlong;
 import static andrevictor.com.jarbas.API.Utils.locais;
+import static andrevictor.com.jarbas.API.Utils.longitudePromotor;
 import static andrevictor.com.jarbas.API.Utils.lugares;
+import static andrevictor.com.jarbas.API.Utils.nomePromotor;
+import static andrevictor.com.jarbas.API.Utils.polilynesRota;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.adapterListView;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.itens;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.letrasAtivas;
@@ -57,12 +67,15 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
     private Polyline polyline;
     private AdapterListViewRota adapterListViewRota;
     private ArrayList<ItemListView> itensRota;
+    private int controleInstrucoes;
 
     //-23.546161, -46.913081 Casa
     //-23.536544, -46.646308 Senai
 
     String origem = "-23.546161,%20-46.913081";    // "-25.443195,%20-49.280977";
     String destino = "-23.536544,%20-46.646308";   //"-25.442207,%20-49.278403";
+
+    int PosicaoList;
 
     //Componentes
     private GoogleMap mMap;
@@ -82,7 +95,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         //Obtem a posicao do item clicado na lista da tela anterior
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        final int PosicaoList = bundle.getInt("posicao");
+        PosicaoList = bundle.getInt("posicao");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -143,7 +156,6 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
                 startActivity(intent);
             }
         });
-        //Isso aqui vai ser preenchido dentro de um for pelo json
 
         createListView();
 
@@ -157,10 +169,16 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
 
         int contador = 0;
 
-
-        for ( contador = 0; contador < lugares.size(); contador++){
+        if(linhaAtiva > 0 && linhaAtiva == PosicaoList){
+        for (contador = controlaIntrucoesRota.get(linhaAtiva-1); contador < controlaIntrucoesRota.get(linhaAtiva); contador++){
             ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
             itensRota.add(item);
+        }
+        }else {
+            for (contador = 0; contador < controlaIntrucoesRota.get(linhaAtiva); contador++) {
+                ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
+                itensRota.add(item);
+            }
         }
 
         //Cria o adapter
@@ -262,14 +280,46 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         //mMap.setMyLocationEnabled(true); //Essa e a linha caso precise usar a localizacao
         mMap.setTrafficEnabled(false); //Tira os botoes de baixo no mapa
 
+        LatLng pontoA;
+
         //Marcador
-        LatLng pontoA = new LatLng(LatitudeMercado.get(linhaAtiva), LongitudeMercado.get(linhaAtiva)); //direcoes.getLatitudePromotor(),direcoes.getLongitudePromotor());
-        mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoA));
-        
-        LatLng pontoB = new LatLng(LatitudeMercado.get(linhaAtiva+1), LongitudeMercado.get(linhaAtiva+1)); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
-        mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva+1)).snippet(EnderecoMercado.get(linhaAtiva+1)).position(pontoB));
+        if(linhaAtiva == 0){
+            pontoA = new LatLng(latitudePromotor,longitudePromotor);
+            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoA));
+        }else {
+            pontoA = new LatLng(LatitudeMercado.get(linhaAtiva), LongitudeMercado.get(linhaAtiva));
+            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoA));
+        }
+
+        LatLng pontoB;
+
+        if(linhaAtiva+1 < locais.size()) {
+            pontoB = new LatLng(LatitudeMercado.get(linhaAtiva + 1), LongitudeMercado.get(linhaAtiva + 1)); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
+            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva + 1)).snippet(EnderecoMercado.get(linhaAtiva + 1)).position(pontoB));
+        }else{
+            pontoB = new LatLng(latitudePromotor, longitudePromotor); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
+            mMap.addMarker(new MarkerOptions().title(nomePromotor).snippet(enderecoPromotor).position(pontoB));
+        }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoA,13));
+
+        int contador2 = 0;
+
+        listlatlong = new ArrayList<>();
+
+        if(linhaAtiva > 0 && linhaAtiva == PosicaoList){
+            for (contador2 = controlaPolilynesRota.get(linhaAtiva-1); contador2 < controlaPolilynesRota.get(linhaAtiva); contador2++){
+                for(LatLng p : decodePolyline(polilynesRota.get(contador2))){
+                    listlatlong.add(p);
+                }
+            }
+        }else {
+            for (contador2 = 0; contador2 < controlaPolilynesRota.get(linhaAtiva); contador2++) {
+                for(LatLng p : decodePolyline(polilynesRota.get(contador2))){
+                    listlatlong.add(p);
+                }
+            }
+        }
 
         //        LatLngBounds bounds = new LatLngBounds.Builder()
         //              .include(pontoA)
@@ -294,6 +344,40 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
                 startActivity(intent);
             }
         });
+    }
+
+    // DECODE POLYLINE
+    private List<LatLng> decodePolyline(String encoded) {
+
+        List<LatLng> listPoints = new ArrayList<LatLng>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng((((double) lat / 1E5)), (((double) lng / 1E5)));
+            Log.i("Script", "POL: LAT: "+p.latitude+" | LNG: "+p.longitude);
+            listPoints.add(p);
+        }
+        return listPoints;
     }
 
 
