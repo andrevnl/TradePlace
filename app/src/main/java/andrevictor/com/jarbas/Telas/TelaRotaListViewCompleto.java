@@ -19,6 +19,7 @@ import android.widget.Toast;
 import andrevictor.com.jarbas.R;
 
 import static andrevictor.com.jarbas.API.Utils.lugares;
+import static andrevictor.com.jarbas.Telas.TelaRota.arrayTarefa;
 
 public class TelaRotaListViewCompleto extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -35,7 +36,7 @@ public class TelaRotaListViewCompleto extends AppCompatActivity implements Navig
 
         listaCompleta = (ListView) findViewById(R.id.ListaCompleta);
 
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, lugares);
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayTarefa);
         listaCompleta.setAdapter(arrayAdapter);
 
         //Comeco da parte que mexe com menu lateral

@@ -58,8 +58,8 @@ public class TelaRotaMapaCompleto extends FragmentActivity implements OnMapReady
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoA,13));
 
-        mMap.addMarker(new MarkerOptions().title("teste").snippet("teste1").position(pontoA));
-        mMap.addMarker(new MarkerOptions().title("teste").snippet("teste1").position(pontoB));
+        mMap.addMarker(new MarkerOptions().title(bundle.getString("mNome1")).snippet(bundle.getString("mDesc1")).position(pontoA));
+        mMap.addMarker(new MarkerOptions().title(bundle.getString("mNome2")).snippet(bundle.getString("mDesc2")).position(pontoB));
 
         drawRoute();
 

@@ -70,6 +70,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
     private Polyline polyline;
     private AdapterListViewRota adapterListViewRota;
     private ArrayList<ItemListView> itensRota;
+    public static ArrayList<String> arrayTarefa;
     private int controleInstrucoes;
 
     //-23.546161, -46.913081 Casa
@@ -169,6 +170,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
     private void createListView() {
         //Criamos nossa lista que preenchera o ListView
         itensRota = new ArrayList<ItemListView>();
+        arrayTarefa = new ArrayList<>();
 
         int contador = 0;
 
@@ -176,11 +178,13 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         for (contador = controlaIntrucoesRota.get(linhaAtiva-1); contador < controlaIntrucoesRota.get(linhaAtiva); contador++){
             ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
             itensRota.add(item);
+            arrayTarefa.add(lugares.get(contador));
         }
         }else {
             for (contador = 0; contador < controlaIntrucoesRota.get(linhaAtiva); contador++) {
                 ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
                 itensRota.add(item);
+                arrayTarefa.add(lugares.get(contador));
             }
         }
 
@@ -286,35 +290,46 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         //mMap.setMyLocationEnabled(true); //Essa e a linha caso precise usar a localizacao
         mMap.setTrafficEnabled(false); //Tira os botoes de baixo no mapa
 
-        LatLng pontoA;
+        final LatLng pontoA;
+        final String nome1;
+        final String desc1;
+        final String nome2;
+        final String desc2;
 
         //Marcador
         if(linhaAtiva == 0){
             pontoA = new LatLng(latitudePromotor,longitudePromotor);
-            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoA));
+            nome1 = nomePromotor;
+            desc1 = enderecoPromotor;
+            mMap.addMarker(new MarkerOptions().title(nomePromotor).snippet(enderecoPromotor).position(pontoA));
         }else {
             pontoA = new LatLng(LatitudeMercado.get(linhaAtiva-1), LongitudeMercado.get(linhaAtiva-1));
+            nome1 = locais.get(linhaAtiva-1);
+            desc1 = EnderecoMercado.get(linhaAtiva-1);
             mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva-1)).snippet(EnderecoMercado.get(linhaAtiva-1)).position(pontoA));
         }
 
-        LatLng pontoB;
+        final LatLng pontoB;
 
         if(linhaAtiva < locais.size() && linhaAtiva == 0) {
             pontoB = new LatLng(LatitudeMercado.get(linhaAtiva), LongitudeMercado.get(linhaAtiva)); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
-            mMap.addMarker(new MarkerOptions().title(nomePromotor).snippet(enderecoPromotor).position(pontoB));
+            nome2 = locais.get(linhaAtiva);
+            desc2 = EnderecoMercado.get(linhaAtiva);
+            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoB));
         }else if(linhaAtiva < locais.size()) {
             pontoB = new LatLng(LatitudeMercado.get(linhaAtiva), LongitudeMercado.get(linhaAtiva)); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
+            nome2 = locais.get(linhaAtiva);
+            desc2 = EnderecoMercado.get(linhaAtiva);
             mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoB));
         }else{
             pontoB = new LatLng(latitudePromotor, longitudePromotor); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
+            nome2 = nomePromotor;
+            desc2 = enderecoPromotor;
             mMap.addMarker(new MarkerOptions().title(nomePromotor).snippet(enderecoPromotor).position(pontoB));
         }
 
-        if(linhaAtiva == 0) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoB, 13));
-        }else{
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoA, 13));
-        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoA, 13));
+
 
         int contador2 = 0;
 
@@ -348,10 +363,14 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
             @Override
             public void onMapClick(LatLng latLng) {
                 Bundle bundle = new Bundle();
-                //  bundle.putDouble("mLat1", direcoes.getLatitudePromotor());
-                //  bundle.putDouble("mLng1", direcoes.getLongitudePromotor());
-                //  bundle.putDouble("mLat2", direcoes.getLatitudeMercado());
-                //  bundle.putDouble("mLng2", direcoes.getLongitudeMercado());
+                bundle.putDouble("mLat1", pontoA.latitude);
+                bundle.putDouble("mLng1", pontoA.longitude);
+                bundle.putDouble("mLat2", pontoB.latitude);
+                bundle.putDouble("mLng2", pontoB.longitude);
+                bundle.putString("mNome1", nome1);
+                bundle.putString("mDesc1",desc1);
+                bundle.putString("mNome2", nome2);
+                bundle.putString("mDesc2",desc2);
                 Intent intent = new Intent(getApplicationContext(), TelaRotaMapaCompleto.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -387,7 +406,6 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
             lng += dlng;
 
             LatLng p = new LatLng((((double) lat / 1E5)), (((double) lng / 1E5)));
-            Log.i("Script", "POL: LAT: "+p.latitude+" | LNG: "+p.longitude);
             listPoints.add(p);
         }
         return listPoints;
