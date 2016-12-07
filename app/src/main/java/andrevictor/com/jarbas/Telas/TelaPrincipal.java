@@ -389,7 +389,8 @@ public class TelaPrincipal extends AppCompatActivity
         @Override
         protected Direcoes doInBackground(Void... params) {
             Utils util = new Utils();
-            return util.getInformacao("http://192.168.0.100:8080/TradeForce/tarefa");
+           // return util.getInformacao("http://192.168.0.100:8080/TradeForce/tarefa");
+            return util.getInformacao("http://192.168.2.251:8080/TradeForce/tarefa");
         }
 
         @Override

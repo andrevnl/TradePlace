@@ -30,6 +30,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +55,7 @@ import static andrevictor.com.jarbas.API.Utils.longitudePromotor;
 import static andrevictor.com.jarbas.API.Utils.lugares;
 import static andrevictor.com.jarbas.API.Utils.nomePromotor;
 import static andrevictor.com.jarbas.API.Utils.polilynesRota;
+import static andrevictor.com.jarbas.API.Utils.precoRota;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.adapterListView;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.itens;
 import static andrevictor.com.jarbas.Telas.TelaPrincipal.letrasAtivas;
@@ -275,6 +278,9 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+        textPreco.setText("VALOR DA VIAGEM: R$"+ new DecimalFormat("#0.00").format(precoRota.get(linhaAtiva)));
+
         mMap = googleMap;
 
         //mMap.setMyLocationEnabled(true); //Essa e a linha caso precise usar a localizacao
@@ -287,21 +293,28 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
             pontoA = new LatLng(latitudePromotor,longitudePromotor);
             mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoA));
         }else {
-            pontoA = new LatLng(LatitudeMercado.get(linhaAtiva), LongitudeMercado.get(linhaAtiva));
-            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoA));
+            pontoA = new LatLng(LatitudeMercado.get(linhaAtiva-1), LongitudeMercado.get(linhaAtiva-1));
+            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva-1)).snippet(EnderecoMercado.get(linhaAtiva-1)).position(pontoA));
         }
 
         LatLng pontoB;
 
-        if(linhaAtiva+1 < locais.size()) {
-            pontoB = new LatLng(LatitudeMercado.get(linhaAtiva + 1), LongitudeMercado.get(linhaAtiva + 1)); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
-            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva + 1)).snippet(EnderecoMercado.get(linhaAtiva + 1)).position(pontoB));
+        if(linhaAtiva < locais.size() && linhaAtiva == 0) {
+            pontoB = new LatLng(LatitudeMercado.get(linhaAtiva), LongitudeMercado.get(linhaAtiva)); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
+            mMap.addMarker(new MarkerOptions().title(nomePromotor).snippet(enderecoPromotor).position(pontoB));
+        }else if(linhaAtiva < locais.size()) {
+            pontoB = new LatLng(LatitudeMercado.get(linhaAtiva), LongitudeMercado.get(linhaAtiva)); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
+            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoB));
         }else{
             pontoB = new LatLng(latitudePromotor, longitudePromotor); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
             mMap.addMarker(new MarkerOptions().title(nomePromotor).snippet(enderecoPromotor).position(pontoB));
         }
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoA,13));
+        if(linhaAtiva == 0) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoB, 13));
+        }else{
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pontoA, 13));
+        }
 
         int contador2 = 0;
 

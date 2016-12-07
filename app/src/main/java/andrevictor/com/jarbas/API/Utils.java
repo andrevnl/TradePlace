@@ -23,7 +23,7 @@ public class Utils {
     public static ArrayList<LatLng> listlatlong; //Lista com latitude e longitude para desenhar o mapa
     public static ArrayList<Integer> controlaIntrucoesRota;
     public static ArrayList<Integer> controlaPolilynesRota;
-    public static double precoRota;
+    public static ArrayList<Double> precoRota;
     public static int sequenciaRota;
     public static double latitudePromotor;
     public static double longitudePromotor;
@@ -52,7 +52,7 @@ public class Utils {
             locais = new ArrayList<>();
             controlaIntrucoesRota = new ArrayList<>();
             controlaPolilynesRota = new ArrayList<>();
-            precoRota = 0;
+            precoRota = new ArrayList<>();
             sequenciaRota = 0;
 
             JSONArray jsonapi = new JSONArray(json); //Pega o Json
@@ -66,7 +66,7 @@ public class Utils {
             longitudePromotor = rotaLocalizacao.getDouble("longitude"); //Pega longitude casa promotor
             JSONObject rotaEmpresaPromotor = rotaPromotor.getJSONObject("empresa");
             direcoes.setEmpresaPromotor(rotaEmpresaPromotor.getString("nome")); //Pega o nome da empresa
-            enderecoPromotor = "Casa";
+            enderecoPromotor = rotaPromotor.getString("endereco");
 
 
             //Mercado //Peguei tudo de todos os mercados para usar no programa na primeira vez que roda
@@ -87,7 +87,7 @@ public class Utils {
 
             for(int i = 0; i < rotaRotas.length(); i++){
                 JSONObject rotaTeste = rotaRotas.getJSONObject(i);
-                precoRota =  0;//rotaTeste.getDouble("preco"); //Pega o preco
+                precoRota.add(rotaTeste.getDouble("preco")); //Pega o preco
                 sequenciaRota = rotaTeste.getInt("sequencia"); //Pega a sequencia
 
                 JSONArray instrucoesRotas = rotaTeste.getJSONArray("instrucoes"); //Instrucoes
