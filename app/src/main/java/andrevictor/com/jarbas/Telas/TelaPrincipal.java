@@ -399,9 +399,6 @@ public class TelaPrincipal extends AppCompatActivity
 
             createListView(); //Copula a list com o nome dos mercados
 
-       //     LateralNome.setText("AAAA");//direcoes.getNomePromotor()); //Muda nome no menu lateral para o nome do promotor
-       //     LateralEmpresa.setText("BBB");//direcoes.getEmpresaPromotor()); //Muda empresa no menu lateral para a do promotor
-
             //OnClick da lista que chama a outra tela e passa as informacoes da rota (verificar se vai ser assim mesmo)
             ///////////////////////////////////////////////////////////////////////////////
             listaPrincipal.setOnItemClickListener(new AdapterView.OnItemClickListener() {

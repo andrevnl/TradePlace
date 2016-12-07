@@ -66,18 +66,10 @@ import static andrevictor.com.jarbas.Telas.TelaPrincipal.listaPrincipal;
 public class TelaRota extends AppCompatActivity implements AdapterView.OnItemClickListener,OnMapReadyCallback,NavigationView.OnNavigationItemSelectedListener {
 
     //Array que copulam a listview
-
     private Polyline polyline;
     private AdapterListViewRota adapterListViewRota;
     private ArrayList<ItemListView> itensRota;
     public static ArrayList<String> arrayTarefa;
-    private int controleInstrucoes;
-
-    //-23.546161, -46.913081 Casa
-    //-23.536544, -46.646308 Senai
-
-    String origem = "-23.546161,%20-46.913081";    // "-25.443195,%20-49.280977";
-    String destino = "-23.536544,%20-46.646308";   //"-25.442207,%20-49.278403";
 
     int PosicaoList;
 
@@ -162,9 +154,6 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         });
 
         createListView();
-
-
-
     }
 
     private void createListView() {
@@ -173,16 +162,69 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         arrayTarefa = new ArrayList<>();
 
         int contador = 0;
+        ItemListView item;
 
         if(linhaAtiva > 0 && linhaAtiva == PosicaoList){
         for (contador = controlaIntrucoesRota.get(linhaAtiva-1); contador < controlaIntrucoesRota.get(linhaAtiva); contador++){
-            ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
+
+            if (lugares.get(contador).toLowerCase().contains("ônibus")){
+                item = new ItemListView(lugares.get(contador), R.drawable.ic_onibus_g);
+            }else if(lugares.get(contador).toLowerCase().contains("metro")){
+                item = new ItemListView(lugares.get(contador), R.drawable.ic_metro_g);
+            }else if(lugares.get(contador).toLowerCase().contains("trem")){
+                item = new ItemListView(lugares.get(contador), R.drawable.ic_trem_g);
+            }else{
+                item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
+            }
+
             itensRota.add(item);
             arrayTarefa.add(lugares.get(contador));
         }
-        }else {
+        }else if(linhaAtiva == PosicaoList){
             for (contador = 0; contador < controlaIntrucoesRota.get(linhaAtiva); contador++) {
-                ItemListView item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
+
+                if (lugares.get(contador).toLowerCase().contains("ônibus")){
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_onibus_g);
+                }else if(lugares.get(contador).toLowerCase().contains("metro")){
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_metro_g);
+                }else if(lugares.get(contador).toLowerCase().contains("trem")){
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_trem_g);
+                }else{
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
+                }
+
+                itensRota.add(item);
+                arrayTarefa.add(lugares.get(contador));
+            }
+        }else if(PosicaoList == 0 && linhaAtiva != PosicaoList){
+            for (contador = 0; contador < controlaIntrucoesRota.get(PosicaoList); contador++) {
+
+                if (lugares.get(contador).toLowerCase().contains("ônibus")){
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_onibus_g);
+                }else if(lugares.get(contador).toLowerCase().contains("metro")){
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_metro_g);
+                }else if(lugares.get(contador).toLowerCase().contains("trem")){
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_trem_g);
+                }else{
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
+                }
+
+                itensRota.add(item);
+                arrayTarefa.add(lugares.get(contador));
+            }
+        }else if(PosicaoList > 0 && linhaAtiva != PosicaoList){
+            for (contador = controlaIntrucoesRota.get(PosicaoList-1); contador < controlaIntrucoesRota.get(PosicaoList); contador++){
+
+                if (lugares.get(contador).toLowerCase().contains("ônibus")){
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_onibus_g);
+                }else if(lugares.get(contador).toLowerCase().contains("metro")){
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_metro_g);
+                }else if(lugares.get(contador).toLowerCase().contains("trem")){
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_trem_g);
+                }else{
+                    item = new ItemListView(lugares.get(contador), R.drawable.ic_caminhar_g);
+                }
+
                 itensRota.add(item);
                 arrayTarefa.add(lugares.get(contador));
             }
@@ -201,6 +243,7 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -283,7 +326,8 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        textPreco.setText("VALOR DA VIAGEM: R$"+ new DecimalFormat("#0.00").format(precoRota.get(linhaAtiva)));
+
+        textPreco.setText("VALOR DA VIAGEM: R$"+ new DecimalFormat("#0.00").format(precoRota.get(PosicaoList)));
 
         mMap = googleMap;
 
@@ -297,32 +341,32 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
         final String desc2;
 
         //Marcador
-        if(linhaAtiva == 0){
+        if(PosicaoList == 0){
             pontoA = new LatLng(latitudePromotor,longitudePromotor);
             nome1 = nomePromotor;
             desc1 = enderecoPromotor;
             mMap.addMarker(new MarkerOptions().title(nomePromotor).snippet(enderecoPromotor).position(pontoA));
         }else {
-            pontoA = new LatLng(LatitudeMercado.get(linhaAtiva-1), LongitudeMercado.get(linhaAtiva-1));
-            nome1 = locais.get(linhaAtiva-1);
-            desc1 = EnderecoMercado.get(linhaAtiva-1);
-            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva-1)).snippet(EnderecoMercado.get(linhaAtiva-1)).position(pontoA));
+            pontoA = new LatLng(LatitudeMercado.get(PosicaoList-1), LongitudeMercado.get(PosicaoList-1));
+            nome1 = locais.get(PosicaoList-1);
+            desc1 = EnderecoMercado.get(PosicaoList-1);
+            mMap.addMarker(new MarkerOptions().title(locais.get(PosicaoList-1)).snippet(EnderecoMercado.get(PosicaoList-1)).position(pontoA));
         }
 
         final LatLng pontoB;
 
-        if(linhaAtiva < locais.size() && linhaAtiva == 0) {
-            pontoB = new LatLng(LatitudeMercado.get(linhaAtiva), LongitudeMercado.get(linhaAtiva)); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
-            nome2 = locais.get(linhaAtiva);
-            desc2 = EnderecoMercado.get(linhaAtiva);
-            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoB));
-        }else if(linhaAtiva < locais.size()) {
-            pontoB = new LatLng(LatitudeMercado.get(linhaAtiva), LongitudeMercado.get(linhaAtiva)); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
-            nome2 = locais.get(linhaAtiva);
-            desc2 = EnderecoMercado.get(linhaAtiva);
-            mMap.addMarker(new MarkerOptions().title(locais.get(linhaAtiva)).snippet(EnderecoMercado.get(linhaAtiva)).position(pontoB));
+        if(PosicaoList < locais.size() && PosicaoList == 0) {
+            pontoB = new LatLng(LatitudeMercado.get(PosicaoList), LongitudeMercado.get(PosicaoList));
+            nome2 = locais.get(PosicaoList);
+            desc2 = EnderecoMercado.get(PosicaoList);
+            mMap.addMarker(new MarkerOptions().title(locais.get(PosicaoList)).snippet(EnderecoMercado.get(PosicaoList)).position(pontoB));
+        }else if(PosicaoList < locais.size()) {
+            pontoB = new LatLng(LatitudeMercado.get(PosicaoList), LongitudeMercado.get(PosicaoList));
+            nome2 = locais.get(PosicaoList);
+            desc2 = EnderecoMercado.get(PosicaoList);
+            mMap.addMarker(new MarkerOptions().title(locais.get(PosicaoList)).snippet(EnderecoMercado.get(PosicaoList)).position(pontoB));
         }else{
-            pontoB = new LatLng(latitudePromotor, longitudePromotor); //direcoes.getLatitudeMercado(),direcoes.getLongitudeMercado());
+            pontoB = new LatLng(latitudePromotor, longitudePromotor);
             nome2 = nomePromotor;
             desc2 = enderecoPromotor;
             mMap.addMarker(new MarkerOptions().title(nomePromotor).snippet(enderecoPromotor).position(pontoB));
@@ -341,21 +385,25 @@ public class TelaRota extends AppCompatActivity implements AdapterView.OnItemCli
                     listlatlong.add(p);
                 }
             }
-        }else {
+        }else if (linhaAtiva == PosicaoList){
             for (contador2 = 0; contador2 < controlaPolilynesRota.get(linhaAtiva); contador2++) {
                 for(LatLng p : decodePolyline(polilynesRota.get(contador2))){
                     listlatlong.add(p);
                 }
             }
+        }else if (PosicaoList == 0 && linhaAtiva != PosicaoList) {
+            for (contador2 = 0; contador2 < controlaPolilynesRota.get(PosicaoList); contador2++) {
+                for(LatLng p : decodePolyline(polilynesRota.get(contador2))){
+                    listlatlong.add(p);
+                }
+            }
+        }else if (PosicaoList > 0 && linhaAtiva != PosicaoList){
+            for (contador2 = controlaPolilynesRota.get(PosicaoList-1); contador2 < controlaPolilynesRota.get(PosicaoList); contador2++){
+                for(LatLng p : decodePolyline(polilynesRota.get(contador2))){
+                    listlatlong.add(p);
+                }
+            }
         }
-
-        //        LatLngBounds bounds = new LatLngBounds.Builder()
-        //              .include(pontoA)
-        //            .include(pontoB)
-        //          .build();
-
-
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,50));
 
         drawRoute();
 
